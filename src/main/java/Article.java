@@ -8,4 +8,12 @@ public class Article {
         this.label = new ArrayList<String>();
         this.text = new String();
     }
+
+    public ArrayList<String> getLabel() {
+        return label;
+    }
+
+    public String getText() {
+        return text;
+    }
 }
