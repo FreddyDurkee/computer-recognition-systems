@@ -59,4 +59,12 @@ public class Article implements Comparable<Article> {
         }
         return -1;
     }
+
+    public ArrayList<String> getLabel() {
+        return label;
+    }
+
+    public String getText() {
+        return text;
+    }
 }
