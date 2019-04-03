@@ -1,4 +1,5 @@
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -17,22 +18,22 @@ public class Article implements Comparable<Article> {
         this.title = new String();
     }
 
-    public Article(ArrayList<String> labels, String title, String text){
+    public Article(ArrayList<String> labels, String title, String text) {
         this.label = labels;
         this.text = text;
         this.title = title;
     }
 
-    public void addLabel(String label){
+    public void addLabel(String label) {
         this.label.add(label);
     }
 
-    public void clearLabels(){
+    public void clearLabels() {
         this.label.clear();
     }
 
-    public String getTextAndTitle(){
-        return getTitle()+"\n"+getText();
+    public String getTextAndTitle() {
+        return getTitle() + "\n" + getText();
     }
 
     @Override
@@ -52,19 +53,11 @@ public class Article implements Comparable<Article> {
 
     @Override
     public int compareTo(Article o) {
-        if(this.hashCode() == o.hashCode()){
-            if(this.equals(o)){
+        if (this.hashCode() == o.hashCode()) {
+            if (this.equals(o)) {
                 return 0;
             }
         }
         return -1;
-    }
-
-    public ArrayList<String> getLabel() {
-        return label;
-    }
-
-    public String getText() {
-        return text;
     }
 }

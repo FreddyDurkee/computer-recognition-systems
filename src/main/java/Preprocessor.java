@@ -1,6 +1,8 @@
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
+import org.apache.lucene.analysis.pattern.PatternReplaceFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -17,20 +19,21 @@ public class Preprocessor {
 
     public static DictionarizedArticle extract(Article article) {
         Analyzer analyzer = null;
+        String articleBody = removeNumbers(article.getTextAndTitle());
         try {
+
             analyzer = CustomAnalyzer.builder()
-                    .withTokenizer("standard")
+                    .withTokenizer(StandardTokenizerFactory.class)
                     .addTokenFilter("lowercase")
                     .addTokenFilter("stop")
                     .addTokenFilter("porterstem")
-                    .addTokenFilter("capitalization")
                     .build();
         } catch (IOException e) {
             e.printStackTrace();
         }
         List<String> result = null;
         try {
-            result = analyze(article.getText(), analyzer);
+            result = analyze(articleBody, analyzer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -50,6 +53,9 @@ public class Preprocessor {
         return result;
     }
 
+    private static String removeNumbers(String text){
+        return text.replaceAll("[0-9,.]+","");
+    }
 
 
     private void tokenize(String text) {

@@ -1,7 +1,10 @@
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+@Data
 public class DictionarizedArticle {
     private final ArrayList<String> label;
     private final HashSet<String> dictionary;
