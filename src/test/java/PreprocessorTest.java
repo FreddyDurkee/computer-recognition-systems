@@ -1,12 +1,10 @@
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.hamcrest.collection.IsMapContaining;
 
@@ -28,7 +26,7 @@ public class PreprocessorTest {
                 "Cor van der Klugt told the annual shareholders meeting.");
 
         // When
-        DictionarizedArticle dictionarizedArticle = Preprocessor.extractTokens(article);
+        HashSet<String> currentTokens = Preprocessor.extractTokens(article.getTextAndTitle());
         HashSet<String> expectedTokens = new HashSet<>(Arrays.asList(
                 "eindhoven", "netherland", "april", "nv", "philip",
                 "gloeilampenfabrieken", "lt", "pgloa", "share", "due",
@@ -37,7 +35,7 @@ public class PreprocessorTest {
                 "told", "annual", "sharehold", "meet"));
 
         // Then
-        assertEquals(expectedTokens, dictionarizedArticle.getDictionary());
+        assertEquals(expectedTokens, currentTokens);
 
     }
 
@@ -62,18 +60,21 @@ public class PreprocessorTest {
 
         // When
 
-        Map<String,Integer> dictionary = Preprocessor.createDictionary(dictionarizedArticles);
+        HashSet<String> dictionary = Preprocessor.createDictionary(dictionarizedArticles);
 
         // Then
-
+        HashSet<String> expectedDictionary = new HashSet<String>(){{
+            add("start");
+            add("york");
+            add("told");
+            add("annual");
+            add("meet");
+            add("cat");
+            add("seek");
+        }};
         assertThat(dictionary.size(), is(7));
-        assertThat(dictionary, IsMapContaining.hasEntry("start", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("york", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("told", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("annual", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("meet", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("cat", 0));
-        assertThat(dictionary, IsMapContaining.hasEntry("seek", 0));
+        assertEquals(expectedDictionary, dictionary);
+
     }
 
 }

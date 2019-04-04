@@ -14,7 +14,7 @@ public class AppRunner {
 
         ArrayList<Article> articles = new ArrayList<Article>();
 
-        List<DictionarizedArticle> dictionarizedArticleList = articles.parallelStream().map(Preprocessor::extractTokens).collect(Collectors.toList());
+        List<DictionarizedArticle> dictionarizedArticleList = articles.parallelStream().map(article -> new DictionarizedArticle(article)).collect(Collectors.toList());
 
 
     }
