@@ -17,33 +17,26 @@ public class Preprocessor {
     public Preprocessor() {
     }
 
-    public static DictionarizedArticle extract(Article article) {
-        Analyzer analyzer = null;
+    public static DictionarizedArticle extractTokens(Article article) {
+        Analyzer analyzer;
+        HashSet<String> tokens = new HashSet<>();
         String articleBody = removeNumbers(article.getTextAndTitle());
         try {
-
             analyzer = CustomAnalyzer.builder()
                     .withTokenizer(StandardTokenizerFactory.class)
                     .addTokenFilter("lowercase")
                     .addTokenFilter("stop")
                     .addTokenFilter("porterstem")
                     .build();
+            tokens = analyze(articleBody, analyzer);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        List<String> result = null;
-        try {
-            result = analyze(articleBody, analyzer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        HashSet<String> tokens = new HashSet<String>(result);
-        tokens.addAll(result);
         return new DictionarizedArticle(article.getLabel(), tokens);
     }
 
-    private static List<String> analyze(String text, Analyzer analyzer) throws IOException {
-        List<String> result = new ArrayList<String>();
+    private static HashSet<String> analyze(String text, Analyzer analyzer) throws IOException {
+        HashSet<String> result = new HashSet<>();
         TokenStream tokenStream = analyzer.tokenStream(null, text);
         CharTermAttribute attr = tokenStream.addAttribute(CharTermAttribute.class);
         tokenStream.reset();
@@ -53,13 +46,18 @@ public class Preprocessor {
         return result;
     }
 
-    private static String removeNumbers(String text){
-        return text.replaceAll("[0-9,.]+","");
+    private static String removeNumbers(String text) {
+        return text.replaceAll("[0-9,.]+", "");
     }
 
-
-    private void tokenize(String text) {
-        throw new NotImplementedException();
+    public  static  LinkedHashMap<String,Integer> createDictionary(List<DictionarizedArticle> dictionarizedArticles){
+        LinkedHashMap<String,Integer> dictionary = new LinkedHashMap<>();
+        for(DictionarizedArticle dictionarizedArticle : dictionarizedArticles){
+            for(String token : dictionarizedArticle.getDictionary()){
+                dictionary.put(token, 0);
+            }
+        }
+        return dictionary;
     }
 
 

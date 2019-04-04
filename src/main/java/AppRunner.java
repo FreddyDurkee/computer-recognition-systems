@@ -1,14 +1,7 @@
-import org.apache.lucene.benchmark.utils.ExtractReuters;
-
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class AppRunner {
@@ -21,7 +14,7 @@ public class AppRunner {
 
         ArrayList<Article> articles = new ArrayList<Article>();
 
-        List<DictionarizedArticle> dictionarizedArticleList = articles.parallelStream().map(Preprocessor::extract).collect(Collectors.toList());
+        List<DictionarizedArticle> dictionarizedArticleList = articles.parallelStream().map(Preprocessor::extractTokens).collect(Collectors.toList());
 
 
     }
