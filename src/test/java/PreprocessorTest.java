@@ -3,17 +3,14 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.collection.IsMapContaining;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PreprocessorTest {
 
     @Test
-    public void whenInvoked_extractTokens_thenDictionarizedArticleCreatedWithTokens() {
+    public void extractTokens() {
 
         // Given
         Article article = new Article();
@@ -36,25 +33,48 @@ public class PreprocessorTest {
 
         // Then
         assertEquals(expectedTokens, currentTokens);
+    }
+
+
+    @Test
+    public void extractWords() {
+
+        // Given
+        Article article = new Article();
+        String newLabel = "netherlands";
+        article.addLabel(newLabel);
+        article.setTitle("EINDHOVEN, NETHERLANDS, APRIL 8");
+        article.setText("NV Philips\n" +
+                "Gloeilampenfabrieken &lt;PGLO.AS> shares are due to start trading\n" +
+                "on the New York Stock Exchange on April 14, Philips chairman");
+
+        // When
+        ArrayList<String> currentTokens = Preprocessor.extractWords(article.getTextAndTitle());
+        ArrayList<String> expectedTokens = new ArrayList<>(Arrays.asList(
+                "eindhoven", "netherland", "april", "8", "nv", "philip",
+                "gloeilampenfabrieken", "lt", "pgloa", "share", "ar", "due",
+                "to", "start", "trade", "on", "the", "new", "york", "stock",
+                "exchang", "on", "april", "14", "philip", "chairman"));
+
+        // Then
+        assertEquals(expectedTokens, currentTokens);
 
     }
 
     @Test
-    public void whenInvoked_createDictionary_thenCreateMapWithTokens() {
+    public void createDictionary() {
 
         // Given
-        ArrayList<String> label1 = new ArrayList<String>() {{add("usa");}};
-        ArrayList<String> label2 = new ArrayList<String>() {{add("canada");}};
+        ArrayList<String> label1 = new ArrayList<String>() {{ add("usa");}};
+        ArrayList<String> label2 = new ArrayList<String>() {{ add("canada");}};
 
-        HashSet<String> tokens1 = new HashSet<>(Arrays.asList(
-                "start", "york", "told", "annual","meet"));
-        HashSet<String> tokens2 = new HashSet<>(Arrays.asList(
-                "cat", "meet", "york", "seek"));
+        HashSet<String> tokens1 = new HashSet<>(Arrays.asList( "start", "york", "told", "annual", "meet"));
+        HashSet<String> tokens2 = new HashSet<>(Arrays.asList( "cat", "meet", "york", "seek"));
 
         DictionarizedArticle dictionarizedArticle1 = new DictionarizedArticle(label1, tokens1);
         DictionarizedArticle dictionarizedArticle2 = new DictionarizedArticle(label2, tokens2);
 
-        ArrayList<DictionarizedArticle> dictionarizedArticles = new ArrayList<DictionarizedArticle>();
+        ArrayList<DictionarizedArticle> dictionarizedArticles = new ArrayList<>();
         dictionarizedArticles.add(dictionarizedArticle1);
         dictionarizedArticles.add(dictionarizedArticle2);
 
@@ -63,7 +83,7 @@ public class PreprocessorTest {
         HashSet<String> dictionary = Preprocessor.createDictionary(dictionarizedArticles);
 
         // Then
-        HashSet<String> expectedDictionary = new HashSet<String>(){{
+        HashSet<String> expectedDictionary = new HashSet<String>() {{
             add("start");
             add("york");
             add("told");
@@ -74,7 +94,6 @@ public class PreprocessorTest {
         }};
         assertThat(dictionary.size(), is(7));
         assertEquals(expectedDictionary, dictionary);
-
     }
 
 }

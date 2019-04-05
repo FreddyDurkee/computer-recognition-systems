@@ -1,7 +1,6 @@
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 @Data
@@ -23,8 +22,9 @@ public class DictionarizedArticle {
         this.listOfWords = createListOfWords(article.getTextAndTitle());
     }
 
-    public void extractTokens() {
+    public DictionarizedArticle extractTokens() {
         this.dictionary = Preprocessor.extractTokens(article.getTextAndTitle());
+        return this;
     }
 
     private ArrayList<String> createListOfWords(String text){

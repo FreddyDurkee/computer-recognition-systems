@@ -3,6 +3,8 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.tartarus.snowball.ext.PorterStemmer;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -32,18 +34,16 @@ public class Preprocessor {
     }
 
     public static ArrayList<String> extractWords(String text) {
-        Analyzer analyzer;
-        HashSet<String> tokens = new HashSet<>();
-        try {
-            analyzer = CustomAnalyzer.builder()
-                    .withTokenizer(StandardTokenizerFactory.class)
-                    .addTokenFilter("lowercase")
-                    .build();
-            tokens = analyze(text, analyzer);
-        } catch (IOException e) {
-            e.printStackTrace();
+        PorterStemmer stemmer = new PorterStemmer();
+        ArrayList<String> listOfWords = new ArrayList<>();
+        text = removeDots(text);
+        String[] arrOfSWords = text.split("[,; ?!&@#$%^*()+-.<>\\n]+");
+        for (String word : arrOfSWords) {
+            stemmer.setCurrent(word.toLowerCase());
+            stemmer.stem();
+            listOfWords.add(stemmer.getCurrent());
         }
-        return new ArrayList<String>(tokens);
+        return listOfWords;
     }
 
     private static HashSet<String> analyze(String text, Analyzer analyzer) throws IOException {
@@ -59,6 +59,10 @@ public class Preprocessor {
 
     private static String removeNumbers(String text) {
         return text.replaceAll("[0-9,.]+", "");
+    }
+
+    private static String removeDots(String text) {
+        return text.replaceAll("[.]+", "");
     }
 
     public  static  HashSet<String> createDictionary(List<DictionarizedArticle> dictionarizedArticles){
