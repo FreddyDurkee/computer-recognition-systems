@@ -16,11 +16,11 @@ class EuclideanMetricsTest {
     @Test
     void calculate() throws Exception {
         // Given
-        ArrayList<Object> pointA = new ArrayList<>();
+        ArrayList<Double> pointA = new ArrayList<>();
         pointA.add(5.0);
         pointA.add(7.0);
 
-        ArrayList<Object> pointB = new ArrayList<>();
+        ArrayList<Double> pointB = new ArrayList<>();
         pointB.add(2.0);
         pointB.add(2.0);
 

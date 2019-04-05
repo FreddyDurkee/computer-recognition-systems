@@ -8,7 +8,7 @@ public class ManhattanMetrics implements Metrics{
     // ArrayList<Object> = Point in space
     // Object = one-dimensional value for a given point
     @Override
-    public Double calculate(ArrayList<Object> a, ArrayList<Object> b) throws Exception {
+    public Double calculate(ArrayList<Double> a, ArrayList<Double> b) throws Exception {
         validatePoints(a,b);
         Iterator aIterator = a.iterator();
         Iterator bIterator = b.iterator();
