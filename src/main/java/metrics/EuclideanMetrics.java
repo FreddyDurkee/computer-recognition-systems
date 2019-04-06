@@ -1,15 +1,14 @@
 package metrics;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class EuclideanMetrics implements Metrics {
 
-    // ArrayList<Object> = Point in space
-    // Object = one-dimensional value for a given point
+    // Suma kwadratów różnic wszystkich odpowiadających sobie wymiarów
     @Override
-    public Double calculate(ArrayList<Double> a, ArrayList<Double> b) throws Exception {
-        validatePoints(a,b);
+    public Double calculate(Collection<Double> a, Collection<Double> b) throws Exception {
+        validatePoints(a, b);
         Iterator aIterator = a.iterator();
         Iterator bIterator = b.iterator();
 

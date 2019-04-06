@@ -1,21 +1,21 @@
 package metrics;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
 public class ChebyshevMetrics implements Metrics {
 
-    // ArrayList<Object> = Point in space
-    // Object = one-dimensional value for a given point
+    // Największa wartość bezwzględna różnicy wszystkich odpowiadających sobie wymiarów
     @Override
-    public Double calculate(ArrayList<Double> a, ArrayList<Double> b) throws Exception {
+    public Double calculate(Collection<Double> a, Collection<Double> b) throws Exception {
         validatePoints(a, b);
         Iterator aIterator = a.iterator();
         Iterator bIterator = b.iterator();
 
         Double difference, dimA, dimB;
-        ArrayList<Double> distances = new ArrayList<>();
+        Collection<Double> distances = new ArrayList<>();
 
         while (aIterator.hasNext()) {
             dimA = (Double) aIterator.next();

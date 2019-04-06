@@ -1,13 +1,16 @@
 package metrics;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 public interface Metrics {
 
-    // In this case, the object is Double, which specifies the value in a given dimension for a given point.
-    Double calculate(ArrayList<Double> a, ArrayList<Double> b) throws Exception;
+    /* W tym przypadku a i b są punktami w przestrzeni (kolekcja zawiera wartości cech - n wymiarów)
+    Double jest wartością jednowymiarową opisującą jedną cechę dla danego punktu
+    Liczona jest odgległość w przestrzeni pomiędzy dwoma punktami (brane pod uwagę so wszystkie wymiary)
+    W implementacji sprawdzane jest czy punkty mają taką samą ilość wymiarów (punkt musi mieć min. 1 wymiar) */
+    Double calculate(Collection<Double> a, Collection<Double> b) throws Exception;
 
-    default Boolean validatePoints(ArrayList<Double> a, ArrayList<Double> b) throws Exception {
+    default Boolean validatePoints(Collection<Double> a, Collection<Double> b) throws Exception {
         if (a.isEmpty() || b.isEmpty()) {
             throw new Exception("The point is dimensionless.");
         }

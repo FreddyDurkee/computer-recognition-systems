@@ -1,15 +1,14 @@
 package metrics;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
-public class ManhattanMetrics implements Metrics{
+public class ManhattanMetrics implements Metrics {
 
-    // ArrayList<Object> = Point in space
-    // Object = one-dimensional value for a given point
+    // Suma wartości bezwzględnych z różnic wszystkich odpowiadających sobie wymiarów
     @Override
-    public Double calculate(ArrayList<Double> a, ArrayList<Double> b) throws Exception {
-        validatePoints(a,b);
+    public Double calculate(Collection<Double> a, Collection<Double> b) throws Exception {
+        validatePoints(a, b);
         Iterator aIterator = a.iterator();
         Iterator bIterator = b.iterator();
 
