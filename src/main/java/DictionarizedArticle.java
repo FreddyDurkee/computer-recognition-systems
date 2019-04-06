@@ -2,13 +2,14 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @Data
 public class DictionarizedArticle {
     private final ArrayList<String> label;
     private HashSet<String> dictionary;
     private Article article;
-    private ArrayList<String> listOfWords;
+    private List<String> listOfWords;
 
     public DictionarizedArticle(ArrayList<String> label, HashSet<String> tokens) {
         this.label = label;
@@ -20,14 +21,14 @@ public class DictionarizedArticle {
         this.article = article;
 
         this.listOfWords = createListOfWords(article.getTextAndTitle());
+        this.dictionary = extractTokens();
     }
 
-    public DictionarizedArticle extractTokens() {
-        this.dictionary = Preprocessor.extractTokens(article.getTextAndTitle());
-        return this;
+    private HashSet<String> extractTokens() {
+        return Preprocessor.extractTokens(article.getTextAndTitle());
     }
 
-    private ArrayList<String> createListOfWords(String text){
+    private List<String> createListOfWords(String text){
         return Preprocessor.extractWords(text);
     }
 

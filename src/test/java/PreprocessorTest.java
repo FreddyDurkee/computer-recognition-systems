@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +51,7 @@ public class PreprocessorTest {
                 "on the New York Stock Exchange on April 14, Philips chairman");
 
         // When
-        ArrayList<String> currentTokens = Preprocessor.extractWords(article.getTextAndTitle());
+        List<String> currentTokens = Preprocessor.extractWords(article.getTextAndTitle());
         ArrayList<String> expectedTokens = new ArrayList<>(Arrays.asList(
                 "eindhoven", "netherland", "april", "8", "nv", "philip",
                 "gloeilampenfabrieken", "lt", "pgloa", "share", "ar", "due",

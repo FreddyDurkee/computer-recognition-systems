@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DictionarizedArticleTest {
     @Test
-    void extractTokens() {
+    void getDictionary() {
         // Given
         Article article = new Article();
         String newLabel = "netherlands";
@@ -20,7 +20,7 @@ public class DictionarizedArticleTest {
         DictionarizedArticle dictionarizedArticle = new DictionarizedArticle(article);
 
         // When
-        HashSet<String> extractedTokens =  dictionarizedArticle.extractTokens().getDictionary();
+        HashSet<String> extractedTokens =  dictionarizedArticle.getDictionary();
 
         HashSet<String> expectedTokens = new HashSet<>(Arrays.asList(
                 "colombia", "open", "april", "mai", "coffe", "registr",

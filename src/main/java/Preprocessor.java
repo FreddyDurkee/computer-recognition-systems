@@ -7,6 +7,7 @@ import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Preprocessor {
@@ -29,13 +30,14 @@ public class Preprocessor {
             tokens = analyze(text, analyzer);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Unexpected error on token extraction", e);
         }
         return tokens;
     }
 
-    public static ArrayList<String> extractWords(String text) {
+    public static List<String> extractWords(String text) {
         PorterStemmer stemmer = new PorterStemmer();
-        ArrayList<String> listOfWords = new ArrayList<>();
+        List<String> listOfWords = new ArrayList<>();
         text = removeDots(text);
         String[] arrOfSWords = text.split("[,; ?!&@#$%^*()+-.<>\\n]+");
         for (String word : arrOfSWords) {
@@ -68,12 +70,14 @@ public class Preprocessor {
     public  static  HashSet<String> createDictionary(List<DictionarizedArticle> dictionarizedArticles){
         HashSet<String> dictionary = new HashSet<>();
         for(DictionarizedArticle dictionarizedArticle : dictionarizedArticles){
-            for(String token : dictionarizedArticle.getDictionary()){
-                dictionary.add(token);
-            }
+            dictionary.addAll(dictionarizedArticle.getDictionary());
         }
         return dictionary;
     }
 
+
+    public static List<DictionarizedArticle> convertToDicionarizedArticles(List<Article> articles){
+        return articles.parallelStream().map(article -> new DictionarizedArticle(article)).collect(Collectors.toList());
+    }
 
 }
