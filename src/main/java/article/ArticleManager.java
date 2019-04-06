@@ -1,3 +1,5 @@
+package article;
+
 import lombok.Data;
 
 import java.util.TreeSet;

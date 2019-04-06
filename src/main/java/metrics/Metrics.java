@@ -20,4 +20,6 @@ public interface Metrics {
         return true;
     }
 
+    MetricsType getMetricsType();
+
 }

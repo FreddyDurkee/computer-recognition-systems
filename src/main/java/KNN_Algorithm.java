@@ -1,3 +1,6 @@
+import article.FeaturedArticle;
+import history.ClassificationHistory;
+import history.ClassifiedSample;
 import lombok.Data;
 import metrics.Metrics;
 
@@ -18,12 +21,21 @@ public class KNN_Algorithm {
     // Dane treningowe definiujemy na samym początku
     private ArrayList<FeaturedArticle> treningData;
 
+    private ClassificationHistory classificationHistory;
+
     public KNN_Algorithm(ArrayList<FeaturedArticle> treningData) {
         this.treningData = treningData;
+        this.classificationHistory = new ClassificationHistory();
+    }
+
+    public KNN_Algorithm(ArrayList<FeaturedArticle> treningData, ClassificationHistory classificationHistory) {
+        this.treningData = treningData;
+        this.classificationHistory = classificationHistory;
     }
 
     public KNN_Algorithm() {
         this.treningData = new ArrayList<>();
+        this.classificationHistory = new ClassificationHistory();
     }
 
     // sample - artykuł, który chcemy zaklasyfikować
@@ -47,6 +59,9 @@ public class KNN_Algorithm {
         }
 
         String winnerLabel = calculateMedianLabel(foundLabels);
+
+        sample.getLabel().add(winnerLabel);
+        classificationHistory.add(new ClassifiedSample(sample,k,metrics.getMetricsType()));
 
         return winnerLabel;
     }
@@ -102,17 +117,6 @@ public class KNN_Algorithm {
         }
         return result;
     }
-
-//    public Boolean validateCollection(Collection<Object> collection) throws Exception {
-//        if (collection.size() == 0) {
-//            throw new Exception("The collection is empty.");
-//        }
-//        return true;
-//    }
-//
-//    public int getPointDimension(ArrayList<Object> point) throws Exception {
-//        return point.size();
-//    }
 
     // Losuje losową labelkę z arrayList
     public String randLabel(ArrayList<String> labels){

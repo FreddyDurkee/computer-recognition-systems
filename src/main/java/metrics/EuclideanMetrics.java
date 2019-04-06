@@ -24,4 +24,9 @@ public class EuclideanMetrics implements Metrics {
         return Math.sqrt(sum);
     }
 
+    @Override
+    public MetricsType getMetricsType() {
+        return MetricsType.EUCLIDEAN;
+    }
+
 }

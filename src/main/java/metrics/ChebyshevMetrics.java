@@ -26,4 +26,9 @@ public class ChebyshevMetrics implements Metrics {
 
         return Collections.max(distances);
     }
+
+    @Override
+    public MetricsType getMetricsType() {
+        return MetricsType.CHEBYSHEV;
+    }
 }

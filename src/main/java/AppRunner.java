@@ -1,3 +1,6 @@
+import article.Article;
+import article.DictionarizedArticle;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;

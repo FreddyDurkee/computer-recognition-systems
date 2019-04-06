@@ -23,4 +23,9 @@ public class ManhattanMetrics implements Metrics {
 
         return Math.sqrt(sum);
     }
+
+    @Override
+    public MetricsType getMetricsType() {
+        return MetricsType.MANHATTAN;
+    }
 }

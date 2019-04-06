@@ -1,9 +1,12 @@
+package article;
+
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Data
-public class FeaturedArticle {
+public class FeaturedArticle implements Serializable {
     private ArrayList<String> label;
     private ArrayList<Double> featureVector;
 
@@ -14,5 +17,11 @@ public class FeaturedArticle {
 
     public FeaturedArticle(ArrayList<Double> featureVector) {
         this.featureVector = featureVector;
+        this.label = new ArrayList<>();
+    }
+
+    public FeaturedArticle(){
+        this.featureVector = new ArrayList<>();
+        this.label = new ArrayList<>();
     }
 }
