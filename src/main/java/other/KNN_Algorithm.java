@@ -131,9 +131,8 @@ public class KNN_Algorithm {
         for (int i = 0; result.size() != k; i++) {
             // Bierzemy pod uwagę pierwsze wystapienie indexu
             result.add(copy2.indexOf(copy.get(i)));
-            copy2.remove(copy2.indexOf(copy.get(i)));
+            copy2.set(copy2.indexOf(copy.get(i)), null);
         }
-        System.out.println(result.toString());
         return result;
     }
 
