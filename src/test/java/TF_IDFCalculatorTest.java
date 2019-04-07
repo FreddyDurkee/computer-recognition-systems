@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,14 +33,19 @@ public class TF_IDFCalculatorTest {
         dictionarizedArticles.add(dictArticle1);
         dictionarizedArticles.add(dictArticle2);
 
-        // When Then
+        // When
 
-        assertEquals(0.602, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "the"), DELTA);
-        assertEquals(0, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "best"), DELTA);
-        assertEquals(0, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "memori"), DELTA);
-        assertEquals(0.301, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "i"), DELTA);
-        assertEquals(0.301, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "just"), DELTA);
-        assertEquals(0.301, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "wanna"), DELTA);
-        assertEquals(0.301, TF_IDFCalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "night"), DELTA);
+        List<String> dictionary = new ArrayList<>( Preprocessor.createDictionary(dictionarizedArticles));
+        TF_IDFCalculator TF_IDFcalculator = new TF_IDFCalculator(dictionarizedArticles, dictionary);
+
+        // Then
+
+
+        assertEquals(0, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "best"), DELTA);
+        assertEquals(0, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "memori"), DELTA);
+        assertEquals(0.301, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "i"), DELTA);
+        assertEquals(0.301, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "just"), DELTA);
+        assertEquals(0.301, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "wanna"), DELTA);
+        assertEquals(0.301, TF_IDFcalculator.termFrequency_IDF(dictArticle1, dictionarizedArticles, "night"), DELTA);
     }
 }

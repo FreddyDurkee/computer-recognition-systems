@@ -76,7 +76,7 @@ public class Preprocessor {
     }
 
 
-    public static List<DictionarizedArticle> convertToDicionarizedArticles(List<Article> articles){
+    public static List<DictionarizedArticle> convertToDicionarizedArticles(Set<Article> articles){
         return articles.parallelStream().map(article -> new DictionarizedArticle(article)).collect(Collectors.toList());
     }
 
