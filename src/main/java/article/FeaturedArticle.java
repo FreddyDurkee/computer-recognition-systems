@@ -16,6 +16,7 @@ public class FeaturedArticle implements Serializable {
     public FeaturedArticle(List<String> label, TDoubleArrayList featureVector) {
         this.label = label;
         this.featureVector = featureVector;
+        this.predictedLabel = new ArrayList<>();
     }
 
     public FeaturedArticle(TDoubleArrayList featureVector) {

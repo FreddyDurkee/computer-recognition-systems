@@ -51,4 +51,30 @@ class ClassificationHistoryTest {
         assertEquals(MetricsType.EUCLIDEAN, classifiedSample.getMetricsType());
     }
 
+    @Test
+    void saveToFileOnlyLabels() throws IOException {
+        String testPath = this.getClass().getResource("").getPath().replaceFirst("/", "");
+
+        // Save
+        ClassificationHistory classificationHistory = new ClassificationHistory();
+
+        TDoubleArrayList vector = new TDoubleArrayList();
+        ArrayList<String> labels = new ArrayList<>();
+
+        vector.add(5.0);
+        vector.add(6.0);
+
+        labels.add("usa");
+        labels.add("japan");
+
+        FeaturedArticle featuredArticle = new FeaturedArticle(labels, vector);
+        featuredArticle.setPredictedLabel(labels);
+
+        ClassifiedSample classifiedSampleToSave = new ClassifiedSample(featuredArticle, 2, MetricsType.EUCLIDEAN);
+
+        classificationHistory.getRepository().add(classifiedSampleToSave);
+
+        classificationHistory.saveToFileOnlyLabels(testPath+"labels-test.data");
+    }
+
 }

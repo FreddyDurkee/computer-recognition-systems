@@ -64,4 +64,31 @@ public class ClassificationHistory implements Serializable {
         loadFromFile(file);
     }
 
+    // Zwraca plik tekstowy o takich linijkach
+    // reallabels1,reallabels2;predictedLabel\n
+    public void saveToFileOnlyLabels(File file) throws IOException {
+        BufferedWriter writer = null;
+        writer = new BufferedWriter(new FileWriter(file));
+        for (ClassifiedSample i : this.repository) {
+            writer.write(i.labelsToString());
+        }
+        writer.close();
+    }
+
+    public void saveToFileOnlyLabels() throws IOException {
+        JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        int returnValue = jfc.showSaveDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = jfc.getSelectedFile();
+            saveToFileOnlyLabels(selectedFile);
+        }
+    }
+
+    public void saveToFileOnlyLabels(String path) throws IOException {
+        File file = new File(path);
+        saveToFileOnlyLabels(file);
+    }
+
+
+
 }
