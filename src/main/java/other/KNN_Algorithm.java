@@ -64,7 +64,7 @@ public class KNN_Algorithm {
 
         String winnerLabel = calculateMedianLabel(foundLabels);
 
-        sample.getLabel().add(winnerLabel);
+        sample.getPredictedLabel().add(winnerLabel);
         classificationHistory.add(new ClassifiedSample(sample,k,metrics.getMetricsType()));
 
         return winnerLabel;
