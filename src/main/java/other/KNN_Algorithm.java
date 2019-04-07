@@ -2,9 +2,11 @@ package other;
 
 import article.FeaturedArticle;
 import com.google.common.primitives.Doubles;
+import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.list.array.TDoubleArrayList;
 import history.ClassificationHistory;
 import history.ClassifiedSample;
+import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
 import lombok.Data;
 import metrics.Metrics;
 
@@ -65,7 +67,7 @@ public class KNN_Algorithm {
         String winnerLabel = calculateMedianLabel(foundLabels);
 
         sample.getPredictedLabel().add(winnerLabel);
-        classificationHistory.add(new ClassifiedSample(sample,k,metrics.getMetricsType()));
+        classificationHistory.add(new ClassifiedSample(sample, k, metrics.getMetricsType()));
 
         return winnerLabel;
     }
@@ -98,31 +100,45 @@ public class KNN_Algorithm {
         ArrayList<String> winners = new ArrayList<>();
 
         // Wrzucaj do winners labelki, ktore wystepuja maxValue razy.
-        for(Map.Entry<String, Integer> entry : labelCounter.entrySet()) {
-            if(entry.getValue().equals(maxValue)) {
+        for (Map.Entry<String, Integer> entry : labelCounter.entrySet()) {
+            if (entry.getValue().equals(maxValue)) {
                 winners.add(entry.getKey());
             }
         }
         return winners;
     }
 
-    // Zwraca k najmniejszych wartości z kolekcji
+    // Zwraca k najmniejszych wartości z kolekcji (nie patrzeć na tą metodę, bo aż wstyd i w oczy kłuje)
+    // PS. ważne że działa
     public ArrayList<Integer> getLowestIndexes(TDoubleArrayList collection, int k) throws Exception {
         if (collection.size() < k) {
             throw new Exception("Invalid collection size.");
         }
-        List<Double> copy = Doubles.asList(collection.toArray());
+
+        TDoubleIterator iterator = collection.iterator();
+        ArrayList<Double> copy = new ArrayList<>();
+        ArrayList<Double> copy2 = new ArrayList<>();
+
+        Double temp;
+        while (iterator.hasNext()) {
+            temp = iterator.next();
+            copy.add(temp);
+            copy2.add(temp);
+        }
+
         Collections.sort(copy); // Od najmniejszej do największej
         ArrayList<Integer> result = new ArrayList<>();
         for (int i = 0; result.size() != k; i++) {
             // Bierzemy pod uwagę pierwsze wystapienie indexu
-            result.add(collection.indexOf(copy.get(i)));
+            result.add(copy2.indexOf(copy.get(i)));
+            copy2.remove(copy2.indexOf(copy.get(i)));
         }
+        System.out.println(result.toString());
         return result;
     }
 
     // Losuje losową labelkę z arrayList
-    public String randLabel(ArrayList<String> labels){
+    public String randLabel(ArrayList<String> labels) {
         Random r = new Random();
         int randomValue = r.nextInt(labels.size());
         return labels.get(randomValue);
