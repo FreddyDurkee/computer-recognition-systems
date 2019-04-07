@@ -23,9 +23,10 @@ class ReutersExtractorTest {
         ReutersExtractor reutersExtractor = new ReutersExtractor();
         ArrayList<String>  expected = new ArrayList<>();
         expected.add("usa");
+        Pattern PLACES_PATTERN = Pattern.compile("<PLACES>(.*?)</PLACES>");
 
         // When
-        actual = reutersExtractor.extractPlaces(example);
+        actual = reutersExtractor.extractSomeElements(example, PLACES_PATTERN);
 
         // Then
         assertEquals(expected,actual);
@@ -77,7 +78,7 @@ class ReutersExtractorTest {
         ReutersExtractor reutersExtractor = new ReutersExtractor();
 
         // Extract Data
-        reutersExtractor.extractFile(reutersSgmFile,articleManager);
+        reutersExtractor.extractFile(reutersSgmFile,articleManager, Category.PLACES);
 
         // Print One Article
         Iterator iterator = articleManager.getArticles().iterator();
@@ -98,7 +99,7 @@ class ReutersExtractorTest {
 
         // Extract All Files in Directory
         try {
-            reutersExtractor.extractAllFiles(articleManager);
+            reutersExtractor.extractAllFiles(articleManager, Category.TOPICS);
         } catch (IOException e) {
             e.printStackTrace();
         }
