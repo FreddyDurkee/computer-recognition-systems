@@ -2,6 +2,7 @@ import article.FeaturedArticle;
 import metrics.EuclideanMetrics;
 import metrics.Metrics;
 import org.junit.jupiter.api.Test;
+import other.KNN_Algorithm;
 
 import java.util.*;
 

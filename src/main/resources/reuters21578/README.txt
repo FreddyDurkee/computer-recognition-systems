@@ -346,7 +346,7 @@ indexer decided which categories from which sets that document
 belonged to.  The category sets are as follows:
 
               Number of    Number of Categories   Number of Categories 
-Category Set  Categories     w/ 1+ Occurrences      w/ 20+ Occurrences  
+file_extractor.Category Set  Categories     w/ 1+ Occurrences      w/ 20+ Occurrences
 ************  **********   ********************   ******************** 
 EXCHANGES        39                32                       7
 ORGS             56                32                       9

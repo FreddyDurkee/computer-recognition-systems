@@ -1,3 +1,5 @@
+package file_extractor;
+
 import article.Article;
 import article.ArticleManager;
 
@@ -35,7 +37,7 @@ public class ReutersExtractor {
         this.reutersDir = null;
     }
 
-    protected void extractFile(Path sgmFile, ArticleManager articleManager, Category category) {
+    public void extractFile(Path sgmFile, ArticleManager articleManager, Category category) {
         String title;
         String text;
         ArrayList<String> labels = new ArrayList<>();
@@ -75,7 +77,6 @@ public class ReutersExtractor {
                     // Add article
                     // Not load article with empty labels
                     if(labels.size() != 0){
-                        System.out.println("Załadowałem");
                         articleManager.addArticle(new Article(labels,title,text));
                     }
 

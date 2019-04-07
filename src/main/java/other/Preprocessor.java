@@ -1,3 +1,5 @@
+package other;
+
 import article.Article;
 import article.DictionarizedArticle;
 import org.apache.lucene.analysis.Analyzer;
@@ -5,9 +7,14 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.tartarus.snowball.ext.PorterStemmer;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Preprocessor {
 
@@ -15,10 +22,9 @@ public class Preprocessor {
     public Preprocessor() {
     }
 
-    public static DictionarizedArticle extractTokens(Article article) {
+    public static HashSet<String> extractTokens(String text) {
         Analyzer analyzer;
         HashSet<String> tokens = new HashSet<>();
-        String articleBody = removeNumbers(article.getTextAndTitle());
         try {
             analyzer = CustomAnalyzer.builder()
                     .withTokenizer(StandardTokenizerFactory.class)
@@ -26,11 +32,26 @@ public class Preprocessor {
                     .addTokenFilter("stop")
                     .addTokenFilter("porterstem")
                     .build();
-            tokens = analyze(articleBody, analyzer);
+            text = removeNumbers(text);
+            tokens = analyze(text, analyzer);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Unexpected error on token extraction", e);
         }
-        return new DictionarizedArticle(article.getLabel(), tokens);
+        return tokens;
+    }
+
+    public static List<String> extractWords(String text) {
+        PorterStemmer stemmer = new PorterStemmer();
+        List<String> listOfWords = new ArrayList<>();
+        text = removeDots(text);
+        String[] arrOfSWords = text.split("[,; ?!&@#$%^*()+-.<>\\n]+");
+        for (String word : arrOfSWords) {
+            stemmer.setCurrent(word.toLowerCase());
+            stemmer.stem();
+            listOfWords.add(stemmer.getCurrent());
+        }
+        return listOfWords;
     }
 
     private static HashSet<String> analyze(String text, Analyzer analyzer) throws IOException {
@@ -48,15 +69,21 @@ public class Preprocessor {
         return text.replaceAll("[0-9,.]+", "");
     }
 
-    public  static  LinkedHashMap<String,Integer> createDictionary(List<DictionarizedArticle> dictionarizedArticles){
-        LinkedHashMap<String,Integer> dictionary = new LinkedHashMap<>();
+    private static String removeDots(String text) {
+        return text.replaceAll("[.]+", "");
+    }
+
+    public  static  HashSet<String> createDictionary(List<DictionarizedArticle> dictionarizedArticles){
+        HashSet<String> dictionary = new HashSet<>();
         for(DictionarizedArticle dictionarizedArticle : dictionarizedArticles){
-            for(String token : dictionarizedArticle.getDictionary()){
-                dictionary.put(token, 0);
-            }
+            dictionary.addAll(dictionarizedArticle.getDictionary());
         }
         return dictionary;
     }
 
+
+    public static List<DictionarizedArticle> convertToDicionarizedArticles(Set<Article> articles){
+        return articles.parallelStream().map(article -> new DictionarizedArticle(article)).collect(Collectors.toList());
+    }
 
 }

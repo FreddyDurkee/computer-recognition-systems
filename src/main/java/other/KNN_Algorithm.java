@@ -1,3 +1,5 @@
+package other;
+
 import article.FeaturedArticle;
 import history.ClassificationHistory;
 import history.ClassifiedSample;

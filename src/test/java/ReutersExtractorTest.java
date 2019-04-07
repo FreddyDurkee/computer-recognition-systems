@@ -1,5 +1,7 @@
 import article.Article;
 import article.ArticleManager;
+import file_extractor.Category;
+import file_extractor.ReutersExtractor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
