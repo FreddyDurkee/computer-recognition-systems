@@ -1,3 +1,4 @@
+import gnu.trove.list.array.TDoubleArrayList;
 import lombok.Data;
 import lombok.Generated;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class TF_IDFExtractor implements FeaturesExtractor {
         int n = dictArticles.size();
         List<FeaturedArticle> featuredArticles = new ArrayList<>();
         for (DictionarizedArticle dictArticle : dictArticles) {
-            List<Double> vectorOfFeatures = TF_IDFcalculator.calculateTfIdfForAllWords(dictArticle, dictArticles, dictionary);
+            TDoubleArrayList vectorOfFeatures = TF_IDFcalculator.calculateTfIdfForAllWords(dictArticle, dictArticles, dictionary);
             featuredArticles.add(new FeaturedArticle(dictArticle.getLabel(), vectorOfFeatures));
             System.out.println(i + "/" + n);
             i += 1;

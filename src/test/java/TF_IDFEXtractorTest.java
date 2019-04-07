@@ -1,3 +1,4 @@
+import gnu.trove.list.array.TDoubleArrayList;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashSet;
@@ -39,8 +40,8 @@ public class TF_IDFEXtractorTest {
         List<FeaturedArticle> featuredArticles = featuresExtractor.extract();
         // Then
 
-        List<Double> firstFeatureVector = featuredArticles.get(0).getFeatureVector();
-        List<Double> secondFeatureVector = featuredArticles.get(1).getFeatureVector();
+        TDoubleArrayList firstFeatureVector = featuredArticles.get(0).getFeatureVector();
+        TDoubleArrayList secondFeatureVector = featuredArticles.get(1).getFeatureVector();
 
         assertEquals(2, featuredArticles.size());
 
