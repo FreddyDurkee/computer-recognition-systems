@@ -1,3 +1,6 @@
+package other;
+
+import article.DictionarizedArticle;
 import lombok.Data;
 
 import java.util.*;
@@ -8,7 +11,7 @@ public class TF_IDFCalculator {
 
     private final Map<String, Integer> DF;
 
-    public TF_IDFCalculator(List<DictionarizedArticle> dictionarizedArticles, List<String> dictionary){
+    public TF_IDFCalculator(List<DictionarizedArticle> dictionarizedArticles, List<String> dictionary) {
         this.DF = createDocumentFrequencyMap(dictionarizedArticles, dictionary);
 
     }
@@ -30,16 +33,16 @@ public class TF_IDFCalculator {
         for (String word : dictionary) {
             tf_idfVector.add(termFrequency_IDF(currentArticle, dictionarizedArticles, word));
         }
-        return  tf_idfVector;
+        return tf_idfVector;
     }
 
-    private static Map<String, Integer> createDocumentFrequencyMap(List<DictionarizedArticle> dictionarizedArticles, List<String> dictionary){
+    private static Map<String, Integer> createDocumentFrequencyMap(List<DictionarizedArticle> dictionarizedArticles, List<String> dictionary) {
         Map<String, Integer> DF = dictionary.stream().collect(Collectors.toMap(x -> x, x -> 0));
         for (String word : dictionary) {
             Integer numberOfWordInDocs = documentFrequency(dictionarizedArticles, word);
             DF.put(word, numberOfWordInDocs);
         }
-        return  DF;
+        return DF;
     }
 
     private static LinkedHashMap<String, Integer> termFrequencyMap(List<String> listOfWords, HashSet<String> dictionary) {

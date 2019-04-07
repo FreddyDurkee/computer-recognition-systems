@@ -1,4 +1,7 @@
+package article;
+
 import lombok.Data;
+import other.Preprocessor;
 
 import java.util.ArrayList;
 import java.util.HashSet;

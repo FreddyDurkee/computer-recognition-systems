@@ -1,3 +1,5 @@
+import article.Article;
+import article.DictionarizedArticle;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

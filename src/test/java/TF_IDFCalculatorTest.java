@@ -1,7 +1,10 @@
+import article.Article;
+import article.DictionarizedArticle;
 import org.junit.jupiter.api.Test;
+import other.Preprocessor;
+import other.TF_IDFCalculator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

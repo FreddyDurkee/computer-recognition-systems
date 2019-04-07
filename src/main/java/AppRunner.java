@@ -1,8 +1,11 @@
+import article.Article;
+import article.ArticleManager;
+import file_extractor.Category;
+import file_extractor.ReutersExtractor;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TreeSet;
 
 public class AppRunner {
@@ -17,13 +20,13 @@ public class AppRunner {
         ArticleManager articleManager = new ArticleManager();
 
         System.out.println("extract articles...");
-        reutersExtractor.extractAllFiles(articleManager);
+        reutersExtractor.extractAllFiles(articleManager, Category.PLACES);
 
         TreeSet<Article> articles = articleManager.getArticles();
-        TF_IDFExtractor featuresExtractor = new TF_IDFExtractor(articles);
+//        other.TF_IDFExtractor featuresExtractor = new other.TF_IDFExtractor(articles);
 
         System.out.println("extract features...");
-        List<FeaturedArticle> featuredArticles = featuresExtractor.extract();
+//        List<FeaturedArticle> featuredArticles = featuresExtractor.extract();
 
 
 

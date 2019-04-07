@@ -1,6 +1,12 @@
+import article.Article;
+import article.DictionarizedArticle;
 import org.junit.jupiter.api.Test;
+import other.Preprocessor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -64,11 +70,15 @@ public class PreprocessorTest {
     public void createDictionary() {
 
         // Given
-        ArrayList<String> label1 = new ArrayList<String>() {{ add("usa");}};
-        ArrayList<String> label2 = new ArrayList<String>() {{ add("canada");}};
+        ArrayList<String> label1 = new ArrayList<String>() {{
+            add("usa");
+        }};
+        ArrayList<String> label2 = new ArrayList<String>() {{
+            add("canada");
+        }};
 
-        HashSet<String> tokens1 = new HashSet<>(Arrays.asList( "start", "york", "told", "annual", "meet"));
-        HashSet<String> tokens2 = new HashSet<>(Arrays.asList( "cat", "meet", "york", "seek"));
+        HashSet<String> tokens1 = new HashSet<>(Arrays.asList("start", "york", "told", "annual", "meet"));
+        HashSet<String> tokens2 = new HashSet<>(Arrays.asList("cat", "meet", "york", "seek"));
 
         DictionarizedArticle dictionarizedArticle1 = new DictionarizedArticle(label1, tokens1);
         DictionarizedArticle dictionarizedArticle2 = new DictionarizedArticle(label2, tokens2);

@@ -1,3 +1,8 @@
+package file_extractor;
+
+import article.Article;
+import article.ArticleManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,10 +17,11 @@ public class ReutersExtractor {
 
     private Path reutersDir;
 
-    Pattern PLACE_PATTERN = Pattern.compile("<D>(.*?)</D>");
+    Pattern ELEMENT_PATTERN = Pattern.compile("<D>(.*?)</D>");
     Pattern PLACES_PATTERN = Pattern.compile("<PLACES>(.*?)</PLACES>");
     Pattern TITLE_PATTERN = Pattern.compile("<TITLE>(.*?)</TITLE>");
     Pattern TEXT_PATTERN = Pattern.compile("<BODY>(.*?)</BODY>");
+    Pattern TOPICS_PATTERN = Pattern.compile("<TOPICS>(.*?)</TOPICS>");
 
     private static String[] META_CHARS = {"&", "<", ">", "\"", "'"};
 
@@ -31,10 +37,10 @@ public class ReutersExtractor {
         this.reutersDir = null;
     }
 
-    protected void extractFile(Path sgmFile, ArticleManager articleManager) {
+    public void extractFile(Path sgmFile, ArticleManager articleManager, Category category) {
         String title;
         String text;
-        ArrayList<String> labels;
+        ArrayList<String> labels = new ArrayList<>();
 
         try (BufferedReader reader = Files.newBufferedReader(sgmFile, StandardCharsets.ISO_8859_1)) {
             StringBuilder buffer = new StringBuilder(1024);
@@ -47,7 +53,18 @@ public class ReutersExtractor {
                     // get the pieces,
                 } else {
                     // Get data via pattern to temporary variables
-                    labels = extractPlaces(buffer.toString());
+
+                    switch(category){
+                        case PLACES: {
+                            labels = extractSomeElements(buffer.toString(), PLACES_PATTERN);
+                            break;
+                        }
+                        case TOPICS: {
+                            labels = extractSomeElements(buffer.toString(), TOPICS_PATTERN);
+                            break;
+                        }
+                    }
+
                     title = extractPattern(buffer.toString(),TITLE_PATTERN);
                     text = extractPattern(buffer.toString(),TEXT_PATTERN);
 
@@ -58,7 +75,12 @@ public class ReutersExtractor {
                     }
 
                     // Add article
-                    articleManager.addArticle(new Article(labels,title,text));
+                    // Not load article with empty labels
+                    if(labels.size() != 0){
+                        articleManager.addArticle(new Article(labels,title,text));
+                    }
+
+
 
                     // Clear
                     buffer.setLength(0);
@@ -69,13 +91,13 @@ public class ReutersExtractor {
         }
     }
 
-    public void extractAllFiles(ArticleManager dataSet) throws IOException {
+    public void extractAllFiles(ArticleManager dataSet, Category category) throws IOException {
         dataSet.getArticles().clear();
 
         long count = 0;
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(reutersDir, "*.sgm")) {
             for (Path sgmFile : stream) {
-                extractFile(sgmFile, dataSet); // Load File to dataset
+                extractFile(sgmFile, dataSet, category); // Load File to dataset
                 count++;
             }
         }
@@ -84,14 +106,14 @@ public class ReutersExtractor {
         }
     }
 
-    public ArrayList<String> extractPlaces(String text) {
+    public ArrayList<String> extractSomeElements(String text, Pattern pattern) {
         ArrayList<String> result = new ArrayList<>();
 
-        Matcher matcher = PLACES_PATTERN.matcher(text);
+        Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 if (matcher.group(i) != null) {
-                    Matcher matcher_place = PLACE_PATTERN.matcher(matcher.group(i));
+                    Matcher matcher_place = ELEMENT_PATTERN.matcher(matcher.group(i));
                     while (matcher_place.find()) {
                         for (int k = 1; k <= matcher_place.groupCount(); k++) {
                             if (matcher_place.group(k) != null) {

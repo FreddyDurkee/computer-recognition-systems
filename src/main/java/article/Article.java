@@ -1,9 +1,9 @@
+package article;
+
 import lombok.Data;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Set;
 
 @Data
 public class Article implements Comparable<Article> {

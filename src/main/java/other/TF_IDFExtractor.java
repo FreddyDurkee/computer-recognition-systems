@@ -1,6 +1,9 @@
+package other;
+
+import article.Article;
+import article.DictionarizedArticle;
+import article.FeaturedArticle;
 import lombok.Data;
-import lombok.Generated;
-import lombok.Getter;
 
 import java.util.*;
 
