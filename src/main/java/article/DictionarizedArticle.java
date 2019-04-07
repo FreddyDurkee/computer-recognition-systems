@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 public class DictionarizedArticle {
     private final ArrayList<String> label;
+    private String articleText;
     private HashSet<String> dictionary;
-    private Article article;
     private List<String> listOfWords;
 
     public DictionarizedArticle(ArrayList<String> label, HashSet<String> tokens) {
@@ -21,14 +21,13 @@ public class DictionarizedArticle {
 
     public DictionarizedArticle(Article article) {
         this.label = article.getLabel();
-        this.article = article;
-
+        this.articleText = article.getTextAndTitle();
         this.listOfWords = createListOfWords(article.getTextAndTitle());
         this.dictionary = extractTokens();
     }
 
     private HashSet<String> extractTokens() {
-        return Preprocessor.extractTokens(article.getTextAndTitle());
+        return Preprocessor.extractTokens(articleText);
     }
 
     private List<String> createListOfWords(String text){

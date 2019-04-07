@@ -1,6 +1,7 @@
 package other;
 
 import article.DictionarizedArticle;
+import gnu.trove.list.array.TDoubleArrayList;
 import lombok.Data;
 
 import java.util.*;
@@ -26,10 +27,10 @@ public class TF_IDFCalculator {
         return TF * IDF;
     }
 
-    public List<Double> calculateTfIdfForAllWords(DictionarizedArticle currentArticle,
-                                                  List<DictionarizedArticle> dictionarizedArticles,
-                                                  List<String> dictionary) {
-        List<Double> tf_idfVector = new ArrayList<>();
+    public TDoubleArrayList calculateTfIdfForAllWords(DictionarizedArticle currentArticle,
+                                                      List<DictionarizedArticle> dictionarizedArticles,
+                                                      List<String> dictionary) {
+        TDoubleArrayList tf_idfVector = new TDoubleArrayList();
         for (String word : dictionary) {
             tf_idfVector.add(termFrequency_IDF(currentArticle, dictionarizedArticles, word));
         }

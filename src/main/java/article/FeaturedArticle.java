@@ -1,5 +1,6 @@
 package article;
 
+import gnu.trove.list.array.TDoubleArrayList;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -8,26 +9,17 @@ import java.util.List;
 
 @Data
 public class FeaturedArticle implements Serializable {
-    private ArrayList<String> label;
-    private ArrayList<Double> featureVector;
+    private List<String> label;
+    private TDoubleArrayList featureVector;
 
-    public FeaturedArticle(List<String> label, List<Double> featureVector) {
-        this.label = (ArrayList<String>) label;
-        this.featureVector = (ArrayList<Double>) featureVector;
-    }
 
-    public FeaturedArticle(ArrayList<String> label, ArrayList<Double> featureVector) {
+    public FeaturedArticle(List<String> label, TDoubleArrayList featureVector) {
         this.label = label;
         this.featureVector = featureVector;
     }
 
-    public FeaturedArticle(ArrayList<Double> featureVector) {
+    public FeaturedArticle(TDoubleArrayList featureVector) {
         this.featureVector = featureVector;
-        this.label = new ArrayList<>();
-    }
-
-    public FeaturedArticle(){
-        this.featureVector = new ArrayList<>();
         this.label = new ArrayList<>();
     }
 }

@@ -1,6 +1,8 @@
 package other;
 
 import article.FeaturedArticle;
+import com.google.common.primitives.Doubles;
+import gnu.trove.list.array.TDoubleArrayList;
 import history.ClassificationHistory;
 import history.ClassifiedSample;
 import lombok.Data;
@@ -45,7 +47,7 @@ public class KNN_Algorithm {
     // metrics - używana metryka (Euklidesowa, Manhattan, Czebyszewa)
     public String KNN(FeaturedArticle sample, int k, Metrics metrics) throws Exception {
 
-        ArrayList<Double> distances = new ArrayList<>();
+        TDoubleArrayList distances = new TDoubleArrayList();
         // Liczymy dystans pomiędzy naszą próbką, a wszystkimi danymi treningowymi
         for (FeaturedArticle data : treningData) {
             distances.add(metrics.calculate(
@@ -105,17 +107,16 @@ public class KNN_Algorithm {
     }
 
     // Zwraca k najmniejszych wartości z kolekcji
-    public ArrayList<Integer> getLowestIndexes(Collection<Double> collection, int k) throws Exception {
+    public ArrayList<Integer> getLowestIndexes(TDoubleArrayList collection, int k) throws Exception {
         if (collection.size() < k) {
             throw new Exception("Invalid collection size.");
         }
-        ArrayList<Double> copy = new ArrayList<>(); // Działamy na kopii
-        copy.addAll(collection);
+        List<Double> copy = Doubles.asList(collection.toArray());
         Collections.sort(copy); // Od najmniejszej do największej
         ArrayList<Integer> result = new ArrayList<>();
         for (int i = 0; result.size() != k; i++) {
             // Bierzemy pod uwagę pierwsze wystapienie indexu
-            result.add(((ArrayList<Double>) collection).indexOf(copy.get(i)));
+            result.add(collection.indexOf(copy.get(i)));
         }
         return result;
     }

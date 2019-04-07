@@ -1,5 +1,6 @@
 package metrics;
 
+import gnu.trove.list.array.TDoubleArrayList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,11 +12,11 @@ class ManhattanMetricsTest {
     @Test
     void calculate() throws Exception {
         // Given
-        ArrayList<Double> pointA = new ArrayList<>();
+        TDoubleArrayList pointA = new TDoubleArrayList();
         pointA.add(5.0);
         pointA.add(7.0);
 
-        ArrayList<Double> pointB = new ArrayList<>();
+        TDoubleArrayList pointB = new TDoubleArrayList();
         pointB.add(2.0);
         pointB.add(2.0);
 

@@ -1,4 +1,5 @@
 import article.FeaturedArticle;
+import gnu.trove.list.array.TDoubleArrayList;
 import metrics.EuclideanMetrics;
 import metrics.Metrics;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ class KNN_AlgorithmTest {
     @Test
     void getLowestIndexes() throws Exception {
         // Given
-        ArrayList<Double> example = new ArrayList<>();
+        TDoubleArrayList example = new TDoubleArrayList();
         example.add(6.9); // 1
         example.add(4.2); // 2
         example.add(5.6); // 3
@@ -21,7 +22,7 @@ class KNN_AlgorithmTest {
         example.add(2.5); // 5
         example.add(1.3); // 6
 
-        ArrayList<Integer> expected = new ArrayList<>();
+        ArrayList<Integer> expected = new  ArrayList<>();
         expected.add(5);
         expected.add(4);
         expected.add(1);
@@ -39,8 +40,7 @@ class KNN_AlgorithmTest {
         // Given
         KNN_Algorithm knn = new KNN_Algorithm();
 
-        ArrayList<String> example = new ArrayList<>();
-        example.add("Japan");
+        ArrayList<String> example =  new ArrayList<>();
         example.add("Germany");
         example.add("USA");
         example.add("Norway");
@@ -61,37 +61,37 @@ class KNN_AlgorithmTest {
 
 
         // PUNKTY USA x3
-        ArrayList<Double> featuresUSA1 = new ArrayList<>();
+        TDoubleArrayList featuresUSA1 = new TDoubleArrayList();
         featuresUSA1.add(2.0);
         featuresUSA1.add(5.0);
 
-        ArrayList<Double> featuresUSA2 = new ArrayList<>();
+        TDoubleArrayList featuresUSA2 = new TDoubleArrayList();
         featuresUSA2.add(2.0);
         featuresUSA2.add(4.0);
 
-        ArrayList<Double> featuresUSA3 = new ArrayList<>();
+        TDoubleArrayList featuresUSA3 = new TDoubleArrayList();
         featuresUSA3.add(3.0);
         featuresUSA3.add(5.0);
 
         // PUNKTY JAPAN x3
-        ArrayList<Double> featuresJapan1 = new ArrayList<>();
+        TDoubleArrayList featuresJapan1 = new TDoubleArrayList();
         featuresJapan1.add(6.0);
         featuresJapan1.add(5.0);
 
-        ArrayList<Double> featuresJapan2 = new ArrayList<>();
+        TDoubleArrayList featuresJapan2 = new TDoubleArrayList();
         featuresJapan2.add(6.0);
         featuresJapan2.add(4.0);
 
-        ArrayList<Double> featuresJapan3 = new ArrayList<>();
+        TDoubleArrayList featuresJapan3 = new TDoubleArrayList();
         featuresJapan3.add(5.0);
         featuresJapan3.add(5.0);
 
         // PUNKTY GERMANY x2
-        ArrayList<Double> featuresGermany1 = new ArrayList<>();
+        TDoubleArrayList featuresGermany1 = new TDoubleArrayList();
         featuresGermany1.add(4.0);
         featuresGermany1.add(2.0);
 
-        ArrayList<Double> featuresGermany2 = new ArrayList<>();
+        TDoubleArrayList featuresGermany2 = new TDoubleArrayList();
         featuresGermany2.add(3.0);
         featuresGermany2.add(3.0);
 
@@ -99,10 +99,10 @@ class KNN_AlgorithmTest {
         ArrayList<String> germany = new ArrayList<>();
         germany.add("Germany");
 
-        ArrayList<String> usa = new ArrayList<>();
+        ArrayList<String> usa =  new ArrayList<>();
         usa.add("USA");
 
-        ArrayList<String> japan = new ArrayList<>();
+        ArrayList<String> japan =  new ArrayList<>();
         japan.add("Japan");
 
         // 8 Featured Article
@@ -115,7 +115,7 @@ class KNN_AlgorithmTest {
         FeaturedArticle fa7 = new FeaturedArticle(germany, featuresGermany1);
         FeaturedArticle fa8 = new FeaturedArticle(germany, featuresGermany2);
 
-        ArrayList<FeaturedArticle> trainingData = new ArrayList<>();
+        ArrayList<FeaturedArticle> trainingData =  new ArrayList<>();
         trainingData.add(fa1);
         trainingData.add(fa2);
         trainingData.add(fa3);
@@ -128,15 +128,15 @@ class KNN_AlgorithmTest {
         KNN_Algorithm knn = new KNN_Algorithm(trainingData);
 
         // FeaturedVectors
-        ArrayList<Double> ald1 = new ArrayList<>(); // USA or Japan
+        TDoubleArrayList ald1 = new TDoubleArrayList(); // USA or Japan
         ald1.add(4.0);
         ald1.add(5.0);
 
-        ArrayList<Double> ald2 = new ArrayList<>(); // Germany
+        TDoubleArrayList ald2 = new TDoubleArrayList(); // Germany
         ald2.add(3.0);
         ald2.add(2.0);
 
-        ArrayList<Double> ald3 = new ArrayList<>(); // Japan
+        TDoubleArrayList ald3 = new TDoubleArrayList(); // Japan
         ald3.add(6.0);
         ald3.add(3.0);
 

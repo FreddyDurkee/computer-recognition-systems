@@ -1,6 +1,7 @@
 package history;
 
 import article.FeaturedArticle;
+import gnu.trove.list.array.TDoubleArrayList;
 import metrics.Metrics;
 import metrics.MetricsType;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class ClassificationHistoryTest {
     void saveToFile() throws IOException {
         ClassificationHistory classificationHistory = new ClassificationHistory();
 
-        ArrayList<Double> vector = new ArrayList<>();
+        TDoubleArrayList vector = new TDoubleArrayList();
         ArrayList<String> labels = new ArrayList<>();
 
         vector.add(5.0);
