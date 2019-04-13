@@ -73,5 +73,16 @@
             <version>3.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.parboiled</groupId>
+            <artifactId>parboiled-core</artifactId>
+            <version>1.1.4</version>
+        </dependency>
+
     </dependencies>
 </project>

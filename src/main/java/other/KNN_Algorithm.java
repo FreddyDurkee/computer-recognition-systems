@@ -25,16 +25,16 @@ public class KNN_Algorithm {
     //   [ ... ],
     // ]
     // Dane treningowe definiujemy na samym początku
-    private ArrayList<FeaturedArticle> treningData;
+    private List<FeaturedArticle> treningData;
 
     private ClassificationHistory classificationHistory;
 
-    public KNN_Algorithm(ArrayList<FeaturedArticle> treningData) {
+    public KNN_Algorithm(List<FeaturedArticle> treningData) {
         this.treningData = treningData;
         this.classificationHistory = new ClassificationHistory();
     }
 
-    public KNN_Algorithm(ArrayList<FeaturedArticle> treningData, ClassificationHistory classificationHistory) {
+    public KNN_Algorithm(List<FeaturedArticle> treningData, ClassificationHistory classificationHistory) {
         this.treningData = treningData;
         this.classificationHistory = classificationHistory;
     }
