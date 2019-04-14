@@ -28,7 +28,7 @@ public class CosineSimilarity implements Metrics {
 
     @Override
     public MetricsType getMetricsType() {
-        return MetricsType.EUCLIDEAN;
+        return MetricsType.COSINE;
     }
 
 }
