@@ -101,11 +101,17 @@ public class AppRunner {
 
         System.out.println("classification...");
         KNN_Algorithm knn = new KNN_Algorithm(trainFeatures);
+        int articleCounter = 0;
+        int testFeaturesSize = testFeatures.size();
         for(FeaturedArticle testFeature : testFeatures) {
             knn.KNN(testFeature, k, metrics);
+            articleCounter++;
+            if( articleCounter % 10 == 0) {
+                System.out.println("Classification: "+ articleCounter+"/"+ testFeaturesSize);
+            }
         }
 
-        knn.getClassificationHistory().saveToFile(outputPath);
+        knn.getClassificationHistory().saveToFileOnlyLabels(outputPath);
     }
 
     public static void main(String[] args) throws Exception {

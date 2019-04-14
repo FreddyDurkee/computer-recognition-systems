@@ -1,24 +1,35 @@
-import article.Article;
 import article.ArticleManager;
 import file_extractor.Category;
-import file_extractor.LabelCounter;
 import file_extractor.ReutersExtractor;
 import org.hamcrest.collection.IsMapContaining;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.Resource;
+import utils.TestResource;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ReutersExtractorTest {
+
+    private static Resource testResource;
+    public static final String RESOURCES_PATH = ReutersExtractorTest.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
+
+    @BeforeAll
+    public static void setUp() throws IOException {
+        List<String> lines = Files.readAllLines(Paths.get(RESOURCES_PATH + "reuters21578" + "/reut2-014.sgm"));
+        String content = String.join("\n", lines);
+        testResource = new TestResource(content);
+    }
 
     @Test
     void extractPlaces() {
@@ -28,7 +39,7 @@ class ReutersExtractorTest {
                 "<PEOPLE></PEOPLE>";
         ArrayList<String> actual;
         ReutersExtractor reutersExtractor = new ReutersExtractor();
-        ArrayList<String>  expected = new ArrayList<>();
+        ArrayList<String> expected = new ArrayList<>();
         expected.add("usa");
         Pattern PLACES_PATTERN = Pattern.compile("<PLACES>(.*?)</PLACES>");
 
@@ -36,8 +47,8 @@ class ReutersExtractorTest {
         actual = reutersExtractor.extractSomeElements(example, PLACES_PATTERN);
 
         // Then
-        assertEquals(expected,actual);
-        assertEquals(1,actual.size());
+        assertEquals(expected, actual);
+        assertEquals(1, actual.size());
     }
 
     @Test
@@ -66,10 +77,10 @@ class ReutersExtractorTest {
         String actual;
 
         // When
-        actual = reutersExtractor.extractPattern(example,TITLE_PATTERN);
+        actual = reutersExtractor.extractPattern(example, TITLE_PATTERN);
 
         // Then
-        assertEquals(expected,actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -78,19 +89,19 @@ class ReutersExtractorTest {
         ArticleManager articleManager = new ArticleManager();
 
         // Set resources directory
-        String resourcesPath = AppRunner.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
-        Path reutersSgmFile = Paths.get(resourcesPath + "reuters21578" + "/reut2-014.sgm");
+        //        Path reutersSgmFile = Paths.get(resourcesPath + "reuters21578" + "/reut2-014.sgm");
+        Resource reutersSgmFile = testResource;
 
         // Create Reuters Extractor
         ReutersExtractor reutersExtractor = new ReutersExtractor();
 
         // Extract Data
         reutersExtractor.addCategoryFilter(Category.PLACES)
-                .addLabelFilter(i -> i==1)
-                .extractFile(reutersSgmFile,articleManager);
+                .addLabelFilter(i -> i == 1)
+                .extractFile(reutersSgmFile, articleManager);
 
         // Print One Article
-        assertEquals(721, articleManager.getArticles().size());
+        assertEquals(374, articleManager.getArticles().size());
         Iterator iterator = articleManager.getArticles().iterator();
         System.out.println(iterator.next().toString());
     }
@@ -101,59 +112,22 @@ class ReutersExtractorTest {
         ArticleManager articleManager = new ArticleManager();
 
         // Set resources directory
-        String resourcesPath = AppRunner.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
-        Path reutersSgmFile = Paths.get(resourcesPath + "reuters21578" + "/reut2-014.sgm");
+        Resource reutersSgmFile = testResource;
 
         // Create Reuters Extractor
         ReutersExtractor reutersExtractor = new ReutersExtractor();
 
         // Extract Data
         reutersExtractor.addCategoryFilter(Category.PLACES)
-                .addLabelFilter(i -> i==1)
-                .extractFile(reutersSgmFile,articleManager);
+                .addLabelFilter(i -> i == 1)
+                .extractFile(reutersSgmFile, articleManager);
 
         // Print One Article
         Map<String, Long> map = articleManager.numberOfLabels();
 
         //3. Test map entry, best!
-//        assertThat(map, IsMapContaining.hasEntry("spain", new Long(1)));
-        assertThat(map, IsMapContaining.hasEntry("usa", new Long(474)));
-        assertThat(map, IsMapContaining.hasEntry("brazil", new Long(1)));
-        assertThat(map, IsMapContaining.hasEntry("japan", new Long(23)));
-        assertThat(map, IsMapContaining.hasEntry("hong-kong", new Long(6)));
-        assertThat(map, IsMapContaining.hasEntry("pakistan", new Long(1)));
-        assertThat(map, IsMapContaining.hasEntry("india", new Long(3)));
-        assertThat(map, IsMapContaining.hasEntry("malaysia", new Long(2)));
-        assertThat(map, IsMapContaining.hasEntry("west-germany", new Long(8)));
+        assertThat(map, IsMapContaining.hasEntry("usa", 239L));
+        assertThat(map, IsMapContaining.hasEntry("uk", 22L));
 
-    }
-
-    @Test
-    void extractAllFiles() {
-        // Create Article Manager
-        ArticleManager articleManager = new ArticleManager();
-
-        // Set resources directory
-        String resourcesPath = AppRunner.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
-        Path reutersSgmFolder = Paths.get(resourcesPath + "reuters21578");
-
-        // Setup Extractor
-        ReutersExtractor reutersExtractor = new ReutersExtractor(reutersSgmFolder);
-
-        // Extract All Files in Directory
-        try {
-            reutersExtractor.addCategoryFilter(Category.PLACES)
-                    .addLabelFilter(i -> i==1)
-                    .extractAllFiles(articleManager);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Get one article
-        Iterator iterator = articleManager.getArticles().iterator();
-        Article example = (Article) iterator.next();
-        System.out.println("Labels: "+example.getLabel().toString());
-        System.out.println("Title: "+ example.getTitle());
-        System.out.println("Text: "+ example.getText());
     }
 }
