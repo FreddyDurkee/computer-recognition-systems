@@ -24,7 +24,7 @@ public class ClassifiedSample implements Serializable {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getStringLabel(this.sample.getLabel()));
         stringBuilder.append(";");
-        stringBuilder.append(getStringLabel(this.sample.getPredictedLabel()));
+        stringBuilder.append(getStringLabel(this.sample.getPredictedLabel())+"\n");
 
         return stringBuilder.toString();
     }
