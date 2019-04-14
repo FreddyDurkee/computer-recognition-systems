@@ -2,6 +2,6 @@ package metrics;
 
 public enum MetricsType {
 
-    EUCLIDEAN, MANHATTAN, CHEBYSHEV
+    EUCLIDEAN, MANHATTAN, CHEBYSHEV, COSINE
 
 }
