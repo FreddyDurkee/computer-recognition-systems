@@ -125,6 +125,5 @@ class ReutersExtractorTest {
         //3. Test map entry, best!
         assertThat(map, IsMapContaining.hasEntry("usa", 239L));
         assertThat(map, IsMapContaining.hasEntry("uk", 22L));
-
     }
 }

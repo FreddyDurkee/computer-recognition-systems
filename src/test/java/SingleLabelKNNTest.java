@@ -1,64 +1,23 @@
 import article.FeaturedArticle;
+import com.google.common.collect.Lists;
 import gnu.trove.list.array.TDoubleArrayList;
 import metrics.EuclideanMetrics;
 import metrics.Metrics;
 import org.junit.jupiter.api.Test;
 import other.KNN_Algorithm;
+import other.SingleLabelKNN;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class KNN_AlgorithmTest {
-
-    @Test
-    void getLowestIndexes() throws Exception {
-        // Given
-        TDoubleArrayList example = new TDoubleArrayList();
-        example.add(6.9); // 1
-        example.add(4.2); // 2
-        example.add(5.6); // 3
-        example.add(4.2); // 4
-        example.add(2.5); // 5
-        example.add(1.3); // 6
-
-        ArrayList<Integer> expected = new  ArrayList<>();
-        expected.add(5);
-        expected.add(4);
-        expected.add(1);
-
-        // When
-        KNN_Algorithm knn = new KNN_Algorithm();
-        ArrayList<Integer> actual = knn.getLowestIndexes(example,3);
-
-        // Then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void calculateMedianLabel(){
-        // Given
-        KNN_Algorithm knn = new KNN_Algorithm();
-
-        ArrayList<String> example =  new ArrayList<>();
-        example.add("Germany");
-        example.add("USA");
-        example.add("Norway");
-        example.add("Japan");
-        example.add("USA");
-
-        // When
-        String actual = knn.calculateMedianLabel(example);
-
-        // Then
-        assertTrue(actual.equals("USA") || actual.equals("Japan"));
-    }
+class SingleLabelKNNTest {
 
     @Test
     void KNN() throws Exception {
         // Przykład dla przestrzenii dwuwymiarowej, gdzie: USA i Japan x 3, Germany x 2
         // Given
-
+        List<Integer> listOfK = Lists.asList(2, new Integer[]{});
 
         // PUNKTY USA x3
         TDoubleArrayList featuresUSA1 = new TDoubleArrayList();
@@ -125,7 +84,7 @@ class KNN_AlgorithmTest {
         trainingData.add(fa7);
         trainingData.add(fa8);
 
-        KNN_Algorithm knn = new KNN_Algorithm(trainingData);
+        KNN_Algorithm knn = new SingleLabelKNN(trainingData);
 
         // FeaturedVectors
         TDoubleArrayList ald1 = new TDoubleArrayList(); // USA or Japan
@@ -148,9 +107,13 @@ class KNN_AlgorithmTest {
         // Oczekiwana klasyfikacja: k = 2 / Japan 50% / USA 50% (odległość euklidesowa)
         Metrics metrics = new EuclideanMetrics();
 
-        String UsaOrJapan = knn.KNN(faUsaOrJapan,2, metrics);
-        String Germany = knn.KNN(faGermany, 2, metrics);
-        String Japan = knn.KNN(faJapan, 2, metrics);
+
+        knn.KNN(faUsaOrJapan,listOfK, metrics);
+        knn.KNN(faGermany, listOfK, metrics);
+        knn.KNN(faJapan, listOfK, metrics);
+        String UsaOrJapan = knn.getClassificationHistory().getRepository().get(2).get(0).getWinnerLabels().get(0);
+        String Germany = knn.getClassificationHistory().getRepository().get(2).get(1).getWinnerLabels().get(0);
+        String Japan = knn.getClassificationHistory().getRepository().get(2).get(2).getWinnerLabels().get(0);
 
         assertTrue(UsaOrJapan.equals("USA") || UsaOrJapan.equals("Japan"));
         assertTrue(Germany.equals("Germany"));

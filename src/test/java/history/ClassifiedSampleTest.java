@@ -26,9 +26,7 @@ class ClassifiedSampleTest {
         predictedLabels.add("usa");
 
         FeaturedArticle featuredArticle = new FeaturedArticle(labels, vector);
-        featuredArticle.setPredictedLabel(predictedLabels);
-
-        ClassifiedSample classifiedSample = new ClassifiedSample(featuredArticle, 2, MetricsType.EUCLIDEAN);
+        ClassifiedSample classifiedSample = new ClassifiedSample(featuredArticle, predictedLabels, 2, MetricsType.EUCLIDEAN);
 
         assertEquals("usa,japan;usa",classifiedSample.labelsToString());
     }

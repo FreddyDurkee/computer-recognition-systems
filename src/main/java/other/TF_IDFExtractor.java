@@ -27,13 +27,14 @@ public class TF_IDFExtractor implements FeaturesExtractor {
         this.TF_IDFcalculator = new TF_IDFCalculator(dictArticles, dictionary);
     }
 
-    public TF_IDFExtractor(Set<Article> articles, List<String> dictionary) {
+    public TF_IDFExtractor(Set<Article> articles, TF_IDFExtractor trainExtractor) {
         LOGGER.debug("extract DictionarizedArticles...");
         this.dictArticles = Preprocessor.convertToDicionarizedArticles(articles);
         LOGGER.debug("create dictionary...");
-        this.dictionary = dictionary;
-        this.TF_IDFcalculator = new TF_IDFCalculator(dictArticles, dictionary);
+        this.dictionary = trainExtractor.getDictionary();
+        this.TF_IDFcalculator = new TF_IDFCalculator(trainExtractor.TF_IDFcalculator.getDF());
     }
+
 
     @Override
     public List<FeaturedArticle> extract() {

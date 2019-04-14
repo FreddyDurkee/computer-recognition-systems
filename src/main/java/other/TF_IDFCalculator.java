@@ -3,6 +3,8 @@ package other;
 import article.DictionarizedArticle;
 import gnu.trove.list.array.TDoubleArrayList;
 import lombok.Data;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,21 +12,32 @@ import java.util.stream.Collectors;
 @Data
 public class TF_IDFCalculator {
 
+    public static final Logger LOGGER = LogManager.getLogger(TF_IDFCalculator.class);
+
     private final Map<String, Integer> DF;
+    private int tf;
 
     public TF_IDFCalculator(List<DictionarizedArticle> dictionarizedArticles, List<String> dictionary) {
         this.DF = createDocumentFrequencyMap(dictionarizedArticles, dictionary);
+    }
 
+    public TF_IDFCalculator(Map<String, Integer> DF) {
+        this.DF = DF;
     }
 
     public double termFrequency_IDF(DictionarizedArticle currentArticle,
                                     List<DictionarizedArticle> dictionarizedArticles,
                                     String term) {
         int N = dictionarizedArticles.size();
-        int TF = termFrequency(currentArticle.getListOfWords(), term);
+        int tf = termFrequency(currentArticle.getListOfWords(), term);
         int DF = this.DF.get(term);
+        if (DF == 0) {
+            throw new ArithmeticException("Divide by zero! DF value is 0!");
+        }
         double IDF = Math.log10(N * 1.0 / DF);
-        return TF * IDF;
+        return tf * IDF;
+
+
     }
 
     public TDoubleArrayList calculateTfIdfForAllWords(DictionarizedArticle currentArticle,
@@ -32,7 +45,12 @@ public class TF_IDFCalculator {
                                                       List<String> dictionary) {
         TDoubleArrayList tf_idfVector = new TDoubleArrayList();
         for (String word : dictionary) {
-            tf_idfVector.add(termFrequency_IDF(currentArticle, dictionarizedArticles, word));
+            try {
+                tf_idfVector.add(termFrequency_IDF(currentArticle, dictionarizedArticles, word));
+            }
+            catch (ArithmeticException e){
+                LOGGER.warn(e.getMessage());
+            }
         }
         return tf_idfVector;
     }
@@ -61,7 +79,7 @@ public class TF_IDFCalculator {
     private static int documentFrequency(List<DictionarizedArticle> dictionarizedArticles, String term) {
         int numberOfTermsInDocs = 0;
         for (DictionarizedArticle dictionarizedArticle : dictionarizedArticles) {
-            numberOfTermsInDocs += dictionarizedArticle.getListOfWords().contains(term) ? 1 : 0;
+            numberOfTermsInDocs += dictionarizedArticle.getDictionary().contains(term) ? 1 : 0;
         }
         return numberOfTermsInDocs;
     }

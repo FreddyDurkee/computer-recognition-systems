@@ -79,9 +79,6 @@ public class ReutersExtractor {
                         continue;
                     }
 
-//                    TO DO
-//                    filtr po nazwach etykiet + pomyśleć o wielu etykietach
-
                     if(!labelNames.isEmpty()){
                         if (!labelNames.containsAll(labels)){
                             buffer.setLength(0);

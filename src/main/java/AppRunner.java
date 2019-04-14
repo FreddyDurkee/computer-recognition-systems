@@ -12,13 +12,17 @@ import org.javatuples.Pair;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import other.KNN_Algorithm;
+import other.SingleLabelKNN;
 import other.TF_IDFExtractor;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class AppRunner {
@@ -69,11 +73,11 @@ public class AppRunner {
     public void run(String[] args) throws Exception {
         CommandLine cmd = parse(args);
 
-        int k = Integer.parseInt(cmd.getOptionValue("k"));
+        List<Integer> listOfK = Stream.of(cmd.getOptionValue("k").split(";")).map(Integer::valueOf).collect(Collectors.toList());
         Metrics metrics = MetricsFactory.createFrom(cmd.getOptionValue("m"));
         String outputPath = cmd.getOptionValue("o");
         int splitPerc = Integer.parseInt(cmd.getOptionValue("p", "70"));
-        LOGGER.info(MessageFormat.format("k={},m={},o={},splitPerc={}", k, metrics.getMetricsType(), outputPath, splitPerc));
+        LOGGER.info(MessageFormat.format("k={0},m={1},o={2},splitPerc={3}", listOfK, metrics.getMetricsType(), outputPath, splitPerc));
 
 
         LOGGER.info("Starting article extraction.");
@@ -94,25 +98,28 @@ public class AppRunner {
         Set<Article> testSet = splitedArticles.getValue1();
 
         TF_IDFExtractor trainFeaturesExtractor = new TF_IDFExtractor(trainSet);
-        TF_IDFExtractor testFeaturesExtractor = new TF_IDFExtractor(testSet, trainFeaturesExtractor.getDictionary());
+        TF_IDFExtractor testFeaturesExtractor = new TF_IDFExtractor(testSet, trainFeaturesExtractor);
 
         LOGGER.info("Starting features extraction.");
         List<FeaturedArticle> trainFeatures = trainFeaturesExtractor.extract();
         List<FeaturedArticle> testFeatures = testFeaturesExtractor.extract();
 
         LOGGER.info("Starting classification.");
-        KNN_Algorithm knn = new KNN_Algorithm(trainFeatures);
+        KNN_Algorithm knn = new SingleLabelKNN(trainFeatures);
         int articleCounter = 0;
         int testFeaturesSize = testFeatures.size();
         for (FeaturedArticle testFeature : testFeatures) {
-            knn.KNN(testFeature, k, metrics);
+            knn.KNN(testFeature,listOfK, metrics);
+
             articleCounter++;
             if (articleCounter % 10 == 0) {
                 LOGGER.info("Classification status: " + articleCounter + "/" + testFeaturesSize);
             }
         }
-
-        knn.getClassificationHistory().saveToFileOnlyLabels(outputPath);
+        for( int k : listOfK){
+            File output = new File(outputPath+"/k_"+k+".txt");
+            knn.getClassificationHistory().saveToFileOnlyLabels(output,k);
+        }
     }
 
     public static void main(String[] args) throws Exception {
