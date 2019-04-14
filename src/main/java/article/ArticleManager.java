@@ -5,8 +5,7 @@ import lombok.Data;
 
 import java.util.*;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.*;
 
 @Data
 public class ArticleManager {
@@ -20,6 +19,24 @@ public class ArticleManager {
     public Map<String, Long> numberOfLabels() {
         return articles.stream().collect(groupingBy(article -> article.getLabel().get(0), counting()));
     }
+
+    public Map<String, Long> numberOfAllLabels(){
+        Map<String, Long> result = new HashMap<>();
+        for(Article article:articles){
+            for(String label: article.getLabel()){
+                if(result.containsKey(label))
+                {
+                    result.put(label,result.get(label)+Long.valueOf(1));
+                } else {
+                    result.put(label, Long.valueOf(1));
+                }
+            }
+        }
+        return result;
+    }
+
+
+
 
     public ArticleManager() {
         this.articles = new TreeSet<>();
