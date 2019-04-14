@@ -4,15 +4,13 @@ import org.hamcrest.collection.IsMapContaining;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ArticleManagerTest {
 
@@ -20,14 +18,14 @@ class ArticleManagerTest {
     void addArticle() {
         // Given
         ArticleManager articleManager = new ArticleManager();
-        assertEquals(0,articleManager.getArticles().size());
+        assertEquals(0, articleManager.getArticles().size());
         Article example = new Article();
 
         // When
         articleManager.addArticle(example);
 
         // Then
-        assertEquals(1,articleManager.getArticles().size());
+        assertEquals(1, articleManager.getArticles().size());
     }
 
     @Test
@@ -36,13 +34,13 @@ class ArticleManagerTest {
         ArticleManager articleManager = new ArticleManager();
         Article example = new Article();
         articleManager.addArticle(example);
-        assertEquals(1,articleManager.getArticles().size());
+        assertEquals(1, articleManager.getArticles().size());
 
         // When
         articleManager.clearArticles();
 
         // Then
-        assertEquals(0,articleManager.getArticles().size());
+        assertEquals(0, articleManager.getArticles().size());
     }
 
     @Test
@@ -56,7 +54,7 @@ class ArticleManagerTest {
         int amountOfArticles = articleManager.getAmountArticles();
 
         // Then
-        assertEquals(1,amountOfArticles);
+        assertEquals(1, amountOfArticles);
     }
 
     @Test
@@ -80,7 +78,7 @@ class ArticleManagerTest {
         TreeSet<Article> actual = articleManager.getArticlesWithSpecificNumberLabel(1);
 
         // Then
-        assertEquals(1,actual.size());
+        assertEquals(1, actual.size());
     }
 
     @Test
@@ -138,5 +136,42 @@ class ArticleManagerTest {
         assertThat(testData, IsMapContaining.hasEntry("japan", 2L));
         assertThat(testData, IsMapContaining.hasEntry("canada", 3L));
 
+    }
+
+    @Test
+    void numberOfAllLabels() {
+        // Given
+        ArrayList<String> labels1 = new ArrayList<>();
+        labels1.add("usa");
+        labels1.add("germany");
+
+        ArrayList<String> labels2 = new ArrayList<>();
+        labels2.add("japan");
+        labels2.add("usa");
+
+        ArrayList<String> labels3 = new ArrayList<>();
+        labels3.add("germany");
+        labels3.add("usa");
+
+
+        Article a1 = new Article(labels1, "title", "text");
+        Article a2 = new Article(labels2, "title", "text");
+        Article a3 = new Article(labels3, "title", "text");
+
+        ArticleManager articleManager = new ArticleManager();
+        articleManager.addArticle(a2);
+        articleManager.addArticle(a1);
+        articleManager.addArticle(a3);
+
+        Map<String, Long> expected = new HashMap<>();
+        expected.put("usa", new Long(3));
+        expected.put("germany", new Long(2));
+        expected.put("japan", new Long(1));
+
+        // When
+        Map<String, Long> actual = articleManager.numberOfAllLabels();
+
+        // Then
+        assertEquals(expected,actual);
     }
 }
