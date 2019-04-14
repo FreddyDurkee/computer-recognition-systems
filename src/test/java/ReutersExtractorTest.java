@@ -151,12 +151,9 @@ class ReutersExtractorTest {
 
         // Get one article
         Iterator iterator = articleManager.getArticles().iterator();
-
         Article example = (Article) iterator.next();
         System.out.println("Labels: "+example.getLabel().toString());
         System.out.println("Title: "+ example.getTitle());
         System.out.println("Text: "+ example.getText());
     }
-
-
 }

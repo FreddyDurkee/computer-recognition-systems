@@ -23,6 +23,13 @@ public class TF_IDFExtractor implements FeaturesExtractor {
         this.TF_IDFcalculator = new TF_IDFCalculator(dictArticles, dictionary);
     }
 
+    public TF_IDFExtractor(Set<Article> articles, List<String> dictionary) {
+        System.out.println("extract DictionarizedArticles...");
+        this.dictArticles = Preprocessor.convertToDicionarizedArticles(articles);
+        System.out.println("create dictionary...");
+        this.dictionary = dictionary;
+        this.TF_IDFcalculator = new TF_IDFCalculator(dictArticles, dictionary);
+    }
 
     @Override
     public List<FeaturedArticle> extract() {

@@ -17,27 +17,27 @@ public class ArticleManager {
         this.articles = articles;
     }
 
-    public Map<String, Long> numberOfLabels(){
+    public Map<String, Long> numberOfLabels() {
         return articles.stream().collect(groupingBy(article -> article.getLabel().get(0), counting()));
     }
 
-    public ArticleManager(){
+    public ArticleManager() {
         this.articles = new TreeSet<>();
     }
 
-    public void addArticle(Article article){
+    public void addArticle(Article article) {
         this.articles.add(article);
     }
 
-    public void clearArticles(){
+    public void clearArticles() {
         this.articles.clear();
     }
 
-    public int getAmountArticles(){
+    public int getAmountArticles() {
         return this.articles.size();
     }
 
-    public Pair<Set<Article>, Set<Article>> getTrainAndTestDataInProportion(int traintPersentage){
+    public Pair<Set<Article>, Set<Article>> splitDataInProportion(int traintPersentage) {
         Set<Article> trainSet = new TreeSet<>();
         Set<Article> testSet = new TreeSet<>();
 
@@ -48,27 +48,26 @@ public class ArticleManager {
             labelsCounter.put(labelName, Long.valueOf(0));
         }
 
-        for( Article article : articles){
+        for (Article article : articles) {
             String labelName = article.getLabel().get(0);
-            if(labelsCounter.get(labelName) <= frequencyOfLabelsInAllArticles.get(labelName)*traintPersentage*0.01){
+            if (labelsCounter.get(labelName) < Math.floor(frequencyOfLabelsInAllArticles.get(labelName) * traintPersentage * 0.01)) {
                 trainSet.add(article);
                 labelsCounter.put(labelName, labelsCounter.get(labelName) + 1);
-        }
-        else{
-            testSet.add(article);
+            } else {
+                testSet.add(article);
             }
         }
 
         return new Pair<>(trainSet, testSet);
     }
 
-    public TreeSet<Article> getArticlesWithSpecificNumberLabel(int number){
+    public TreeSet<Article> getArticlesWithSpecificNumberLabel(int number) {
         TreeSet<Article> articles = new TreeSet<>();
         Iterator iterator = this.articles.iterator();
         Article art;
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             art = (Article) iterator.next();
-            if(art.getLabel().size() == number){
+            if (art.getLabel().size() == number) {
                 articles.add(art);
             }
         }

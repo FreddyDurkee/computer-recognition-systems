@@ -2,14 +2,14 @@ package file_extractor;
 
 import article.Article;
 import article.ArticleManager;
-import lombok.Setter;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ReutersExtractor {
 
     private Category category = Category.ANY;
     private LabelCounter labelCounter = LabelCounter.ALL;
-    private Path reutersDir;
+    private Resource[] reutersDir;
     private Predicate<Integer> labelFilter = (x)->true;
     private List<String> labelNames = Collections.emptyList();
 
@@ -36,7 +36,7 @@ public class ReutersExtractor {
     private static String[] META_CHARS_SERIALIZATIONS = {"&amp;", "&lt;",
             "&gt;", "&quot;", "&apos;"};
 
-    public ReutersExtractor(Path reutersDir) {
+    public ReutersExtractor(Resource[] reutersDir) {
         this.reutersDir = reutersDir;
     }
 
@@ -44,12 +44,12 @@ public class ReutersExtractor {
         this.reutersDir = null;
     }
 
-    public void extractFile(Path sgmFile, ArticleManager articleManager) {
+    public void extractFile(Resource sgmFile, ArticleManager articleManager) {
         String title;
         String text;
         ArrayList<String> labels = new ArrayList<>();
 
-        try (BufferedReader reader = Files.newBufferedReader(sgmFile, StandardCharsets.ISO_8859_1)) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(sgmFile.getInputStream(), StandardCharsets.ISO_8859_1)) ) {
             StringBuilder buffer = new StringBuilder(1024);
             String line = null;
 
@@ -133,12 +133,11 @@ public class ReutersExtractor {
         dataSet.getArticles().clear();
 
         long count = 0;
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(reutersDir, "*.sgm")) {
-            for (Path sgmFile : stream) {
-                extractFile(sgmFile, dataSet); // Load File to dataset
-                count++;
-            }
+        for (Resource sgmFile : reutersDir) {
+            extractFile(sgmFile, dataSet); // Load File to dataset
+            count++;
         }
+
         if (count == 0) {
             System.err.println("No .sgm files in " + reutersDir);
         }

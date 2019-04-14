@@ -23,5 +23,4 @@ public interface Metrics {
     }
 
     MetricsType getMetricsType();
-
 }

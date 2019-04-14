@@ -1,12 +1,10 @@
 package other;
 
 import article.FeaturedArticle;
-import com.google.common.primitives.Doubles;
 import gnu.trove.iterator.TDoubleIterator;
 import gnu.trove.list.array.TDoubleArrayList;
 import history.ClassificationHistory;
 import history.ClassifiedSample;
-import jdk.internal.org.objectweb.asm.tree.InnerClassNode;
 import lombok.Data;
 import metrics.Metrics;
 
