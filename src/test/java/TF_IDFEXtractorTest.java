@@ -14,9 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TF_IDFEXtractorTest {
 
+    public static final double ERROR_DELTA = 1e-4;
+
     @Test
     void extract() {
-        double DELTA = 1e-4;
 
         // Given
         Set<Article> articles = new LinkedHashSet<>();
@@ -56,32 +57,24 @@ public class TF_IDFEXtractorTest {
         int wannaIdx = featuresExtractor.getDictionary().indexOf("wanna");
         int itIdx = featuresExtractor.getDictionary().indexOf("it'");
 
-//        System.out.println(memoriIdx  + " -> " +  featuresExtractor.getDictionary().get(memoriIdx));
-//        System.out.println(lateIdx  + " -> " +  featuresExtractor.getDictionary().get(lateIdx));
-//        System.out.println(nightIdx  + " -> " +  featuresExtractor.getDictionary().get(nightIdx));
-//        System.out.println(iIdx  + " -> " +  featuresExtractor.getDictionary().get(iIdx));
-//        System.out.println(bestIdx  + " -> " +  featuresExtractor.getDictionary().get(bestIdx));
-//        System.out.println(justIdx  + " -> " +  featuresExtractor.getDictionary().get(justIdx));
-//        System.out.println(wannaIdx  + " -> " +  featuresExtractor.getDictionary().get(wannaIdx));
-//        System.out.println(itIdx  + " -> " +  featuresExtractor.getDictionary().get(itIdx));
 
-        assertEquals(0, firstFeatureVector.get(memoriIdx), DELTA);
-        assertEquals(0, firstFeatureVector.get(lateIdx), DELTA);
-        assertEquals(0.301, firstFeatureVector.get(nightIdx), DELTA);
-        assertEquals(0.301, firstFeatureVector.get(iIdx), DELTA);
-        assertEquals(0, firstFeatureVector.get(bestIdx), DELTA);
-        assertEquals(0.301, firstFeatureVector.get(justIdx), DELTA);
-        assertEquals(0.301, firstFeatureVector.get(wannaIdx), DELTA);
-        assertEquals(0, firstFeatureVector.get(itIdx), DELTA);
+        assertEquals(0, firstFeatureVector.get(memoriIdx), ERROR_DELTA);
+        assertEquals(0, firstFeatureVector.get(lateIdx), ERROR_DELTA);
+        assertEquals(0.301, firstFeatureVector.get(nightIdx), ERROR_DELTA);
+        assertEquals(0.301, firstFeatureVector.get(iIdx), ERROR_DELTA);
+        assertEquals(0, firstFeatureVector.get(bestIdx), ERROR_DELTA);
+        assertEquals(0.301, firstFeatureVector.get(justIdx), ERROR_DELTA);
+        assertEquals(0.301, firstFeatureVector.get(wannaIdx), ERROR_DELTA);
+        assertEquals(0, firstFeatureVector.get(itIdx), ERROR_DELTA);
 
-        assertEquals(0, secondFeatureVector.get(memoriIdx), DELTA);
-        assertEquals(0.301, secondFeatureVector.get(lateIdx), DELTA);
-        assertEquals(0, secondFeatureVector.get(nightIdx), DELTA);
-        assertEquals(0, secondFeatureVector.get(iIdx), DELTA);
-        assertEquals(0, secondFeatureVector.get(bestIdx), DELTA);
-        assertEquals(0, secondFeatureVector.get(justIdx), DELTA);
-        assertEquals(0, secondFeatureVector.get(wannaIdx), DELTA);
-        assertEquals(0.301, secondFeatureVector.get(itIdx), DELTA);
+        assertEquals(0, secondFeatureVector.get(memoriIdx), ERROR_DELTA);
+        assertEquals(0.301, secondFeatureVector.get(lateIdx), ERROR_DELTA);
+        assertEquals(0, secondFeatureVector.get(nightIdx), ERROR_DELTA);
+        assertEquals(0, secondFeatureVector.get(iIdx), ERROR_DELTA);
+        assertEquals(0, secondFeatureVector.get(bestIdx), ERROR_DELTA);
+        assertEquals(0, secondFeatureVector.get(justIdx), ERROR_DELTA);
+        assertEquals(0, secondFeatureVector.get(wannaIdx), ERROR_DELTA);
+        assertEquals(0.301, secondFeatureVector.get(itIdx), ERROR_DELTA);
 
     }
 }

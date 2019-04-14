@@ -152,8 +152,6 @@ class KNN_AlgorithmTest {
         String Germany = knn.KNN(faGermany, 2, metrics);
         String Japan = knn.KNN(faJapan, 2, metrics);
 
-        System.out.println(UsaOrJapan);
-
         assertTrue(UsaOrJapan.equals("USA") || UsaOrJapan.equals("Japan"));
         assertTrue(Germany.equals("Germany"));
         assertTrue(Japan.equals("Japan"));

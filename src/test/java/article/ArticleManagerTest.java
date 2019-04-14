@@ -1,7 +1,5 @@
 package article;
 
-import article.Article;
-import article.ArticleManager;
 import org.hamcrest.collection.IsMapContaining;
 import org.javatuples.Pair;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,7 @@ import java.util.TreeSet;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArticleManagerTest {
 
@@ -133,12 +131,12 @@ class ArticleManagerTest {
         Map<String, Long> testData = splitedArticles.getValue1().stream().collect(groupingBy(article -> article.getLabel().get(0), counting()));
 
         // Then
-        assertThat(trainData, IsMapContaining.hasEntry("usa", new Long(2)));
-        assertThat(trainData, IsMapContaining.hasEntry("japan", new Long(1)));
-        assertThat(trainData, IsMapContaining.hasEntry("canada", new Long(1)));
-        assertThat(testData, IsMapContaining.hasEntry("usa", new Long(4)));
-        assertThat(testData, IsMapContaining.hasEntry("japan", new Long(2)));
-        assertThat(testData, IsMapContaining.hasEntry("canada", new Long(3)));
+        assertThat(trainData, IsMapContaining.hasEntry("usa", 2L));
+        assertThat(trainData, IsMapContaining.hasEntry("japan", 1L));
+        assertThat(trainData, IsMapContaining.hasEntry("canada", 1L));
+        assertThat(testData, IsMapContaining.hasEntry("usa", 4L));
+        assertThat(testData, IsMapContaining.hasEntry("japan", 2L));
+        assertThat(testData, IsMapContaining.hasEntry("canada", 3L));
 
     }
 }
