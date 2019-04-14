@@ -2,9 +2,10 @@ import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import precision_score
+from sklearn.metrics import precision_score, accuracy_score, recall_score
 from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
+import getopt, sys
 
 def extractLabelsFromFile(path):
     labels = []
@@ -51,7 +52,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     else:
         print('Confusion matrix, without normalization')
 
-    print(cm)
+    # print(cm)
 
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -80,62 +81,60 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     fig.tight_layout()
     return cm
 
+def printClassificationQuality(trueLabels, predictedLabels):
+    # Overall accuracy
+    ACC = accuracy_score(trueLabels, predictedLabels)
+    PRECISION = precision_score(trueLabels, predictedLabels, average='micro')
+    RECALL = recall_score(trueLabels, predictedLabels, average='micro')
+
+    print "ACC = ", ACC
+    print "PRECISION = ", PRECISION
+    # czulosc
+    print "RECALL = ", RECALL
+
 
 def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "f:d:", ["filePath=", "dir="])
+    except getopt.GetoptError:
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-f", "--file"):
+            filePath = arg
+            pathToFileWithClassificationData = os.path.abspath(filePath)
 
-    pathToFileWithClassificationData = os.path.abspath(sys.argv[1])
+            trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData)
 
-    trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData)
+            trueLabels = [x.strip() for x in trueLabels]
+            predictedLabels = [x.strip() for x in predictedLabels]
 
-    trueLabels = [x.strip() for x in trueLabels]
-    predictedLabels = [x.strip() for x in predictedLabels]
+            plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels, predictedLabels),
+                                  normalize=True,
+                                  title='Normalized confusion matrix')
+            printClassificationQuality(trueLabels, predictedLabels)
+            plt.show()
 
-    plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels,predictedLabels), normalize=True,
-                          title='Normalized confusion matrix')
 
-    cnf_matrix = confusion_matrix(trueLabels, predictedLabels)
+        elif opt in ("-d", "--dir"):
+            dir = arg
 
-    FP = cnf_matrix.sum(axis=0) - np.diag(cnf_matrix)
-    FN = cnf_matrix.sum(axis=1) - np.diag(cnf_matrix)
-    TP = np.diag(cnf_matrix)
-    TN = cnf_matrix.sum() - (FP + FN + TP)
+            for r, d, f in os.walk(dir):
+                for file in f:
+                    if '.txt' in file:
+                        if 'config' in file:
+                            continue
+                        pathToFileWithClassificationData = os.path.abspath(dir)
 
-    FP = FP.astype(float)
-    FN = FN.astype(float)
-    TP = TP.astype(float)
-    TN = TN.astype(float)
+                        trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData+"\\"+file)
 
-    # Sensitivity, hit rate, recall, or true positive rate
-    TPR = TP / (TP + FN)
-    # Specificity or true negative rate
-    TNR = TN / (TN + FP)
-    # Precision or positive predictive value PPV = TP / (TP + FP)
-    PPV = precision_score(trueLabels, predictedLabels, average='micro')
-    # Negative predictive value
-    NPV = TN / (TN + FN)
-    # Fall out or false positive rate
-    FPR = FP / (FP + TN)
-    # False negative rate
-    FNR = FN / (TP + FN)
-    # False discovery rate
-    FDR = FP / (TP + FP)
-    # Overall accuracy
-    ACC = (TP + TN) / (TP + FP + FN + TN)
+                        trueLabels = [x.strip() for x in trueLabels]
+                        predictedLabels = [x.strip() for x in predictedLabels]
+                        #
+                        # plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels,predictedLabels), normalize=True,
+                        #                       title='Normalized confusion matrix')
+                        print(file)
+                        printClassificationQuality(trueLabels, predictedLabels)
 
-    print "FP = ",FP
-    print "FN = ", FN
-    print "TP = ", TP
-    print "TN = ", TN
-    print "TPR = ", TPR
-    print "TNR = ", TNR
-    print "PPV = ", PPV
-    print "NPV = ", NPV
-    print "FPR = ", FPR
-    print "FNR = ", FNR
-    print "FDR = ", FDR
-    print "ACC = ", ACC
-
-    plt.show()
 
 
 if __name__ == "__main__":
