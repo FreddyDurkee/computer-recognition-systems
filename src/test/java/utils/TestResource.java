@@ -12,7 +12,7 @@ import java.nio.channels.ReadableByteChannel;
 
 public class TestResource implements Resource {
 
-    private String content = "";
+    private String content;
 
     public TestResource(String content) {
         this.content = content;

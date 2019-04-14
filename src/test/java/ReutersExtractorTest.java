@@ -22,10 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ReutersExtractorTest {
 
     private static Resource testResource;
-    public static final String RESOURCES_PATH = ReutersExtractorTest.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
+    private static final String RESOURCES_PATH = ReutersExtractorTest.class.getClassLoader().getResource("").getPath().replaceFirst("/", "");
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    static void setUp() throws IOException {
         List<String> lines = Files.readAllLines(Paths.get(RESOURCES_PATH + "reuters21578" + "/reut2-014.sgm"));
         String content = String.join("\n", lines);
         testResource = new TestResource(content);
@@ -89,7 +89,6 @@ class ReutersExtractorTest {
         ArticleManager articleManager = new ArticleManager();
 
         // Set resources directory
-        //        Path reutersSgmFile = Paths.get(resourcesPath + "reuters21578" + "/reut2-014.sgm");
         Resource reutersSgmFile = testResource;
 
         // Create Reuters Extractor
@@ -102,8 +101,6 @@ class ReutersExtractorTest {
 
         // Print One Article
         assertEquals(374, articleManager.getArticles().size());
-        Iterator iterator = articleManager.getArticles().iterator();
-        System.out.println(iterator.next().toString());
     }
 
     @Test

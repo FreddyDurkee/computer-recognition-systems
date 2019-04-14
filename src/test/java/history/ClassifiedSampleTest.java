@@ -13,9 +13,6 @@ class ClassifiedSampleTest {
 
     @Test
     void labelsToString() {
-
-        ClassificationHistory classificationHistory = new ClassificationHistory();
-
         TDoubleArrayList vector = new TDoubleArrayList();
         ArrayList<String> labels = new ArrayList<>();
 
@@ -33,6 +30,6 @@ class ClassifiedSampleTest {
 
         ClassifiedSample classifiedSample = new ClassifiedSample(featuredArticle, 2, MetricsType.EUCLIDEAN);
 
-        System.out.println(classifiedSample.labelsToString());
+        assertEquals("usa,japan;usa",classifiedSample.labelsToString());
     }
 }

@@ -1,6 +1,11 @@
 package metrics;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MetricsFactory {
+
+    public static final Logger LOGGER = LogManager.getLogger(MetricsFactory.class);
 
     public static Metrics createFrom(String name){
         switch (name){
@@ -8,7 +13,7 @@ public class MetricsFactory {
             case "c": return new ChebyshevMetrics();
             case "m": return new ManhattanMetrics();
             default:
-                System.out.println("Metric not found. Switching to default - Euclidean.");
+                LOGGER.debug("Metric not found. Switching to default - Euclidean.");
                 return  new EuclideanMetrics();
         }
     }
