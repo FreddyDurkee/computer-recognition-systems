@@ -5,9 +5,9 @@ import com.google.common.collect.Lists;
 
 import java.util.*;
 
-public class SingleLabelKNN extends KNN_Algorithm {
+public class LabelKNN extends KNN_Algorithm {
 
-    public SingleLabelKNN(List<FeaturedArticle> treningData) {
+    public LabelKNN(List<FeaturedArticle> treningData) {
         super(treningData);
     }
 
@@ -29,5 +29,17 @@ public class SingleLabelKNN extends KNN_Algorithm {
         }
 
         return predictedLabels;
+    }
+
+    @Override
+    List<String> predictAllLabels(HashMap<String, Integer> labelCounter) {
+        List<String> predicedLabels = new ArrayList<>();
+        Long all=labelCounter.values().stream().mapToLong(Long::new).sum();
+        for(Map.Entry<String, Integer> labelInfo : labelCounter.entrySet()) {
+            if((labelInfo.getValue().doubleValue()/all.doubleValue())>=0.3){
+                predicedLabels.add(labelInfo.getKey());
+            }
+        }
+        return predicedLabels;
     }
 }

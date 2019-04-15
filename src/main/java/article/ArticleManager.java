@@ -35,9 +35,6 @@ public class ArticleManager {
         return result;
     }
 
-
-
-
     public ArticleManager() {
         this.articles = new TreeSet<>();
     }

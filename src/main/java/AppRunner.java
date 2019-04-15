@@ -12,7 +12,7 @@ import org.javatuples.Pair;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import other.KNN_Algorithm;
-import other.SingleLabelKNN;
+import other.LabelKNN;
 import other.TF_IDFExtractor;
 
 import java.io.File;
@@ -105,7 +105,7 @@ public class AppRunner {
         List<FeaturedArticle> testFeatures = testFeaturesExtractor.extract();
 
         LOGGER.info("Starting classification.");
-        KNN_Algorithm knn = new SingleLabelKNN(trainFeatures);
+        KNN_Algorithm knn = new LabelKNN(trainFeatures);
         int articleCounter = 0;
         int testFeaturesSize = testFeatures.size();
         for (FeaturedArticle testFeature : testFeatures) {
