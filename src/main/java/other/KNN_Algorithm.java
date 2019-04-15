@@ -44,7 +44,6 @@ public abstract class KNN_Algorithm {
             for (Map.Entry<FeaturedArticle, Double> nearest : sortedFeatureToDistance.subList(0,k)) {
                 foundLabels.addAll(nearest.getKey().getLabel());
             }
-
             List<String> winnerLabels = findLabels(foundLabels);
             classificationHistory.add(new ClassifiedSample(sample, winnerLabels, k, metrics.getMetricsType()));
         }
@@ -59,10 +58,11 @@ public abstract class KNN_Algorithm {
                 labelCounter.put(label, 1);
             }
         }
-
-        return predictLabels(labelCounter);
+        return predictAllLabels(labelCounter);
     }
 
     abstract List<String> predictLabels(HashMap<String, Integer> labelCounter);
+
+    abstract List<String> predictAllLabels(HashMap<String, Integer> labelCounter);
 
 }
