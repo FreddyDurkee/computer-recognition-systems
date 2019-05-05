@@ -1,11 +1,18 @@
-import sys
+import getopt
 import os
-import numpy as np
+import sys
+
 import matplotlib.pyplot as plt
-from sklearn.metrics import precision_score, accuracy_score, recall_score
+import numpy as np
+from docx import Document
+from docx.shared import Inches
+from pandas.compat import StringIO
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, accuracy_score, recall_score, f1_score
 from sklearn.utils.multiclass import unique_labels
-import getopt, sys
+import matplotlib.colors as mcolors
+import matplotlib.cm as cm
+
 
 def extractLabelsFromFile(path):
     labels = []
@@ -14,6 +21,7 @@ def extractLabelsFromFile(path):
         labels.append(line)
         print line
     return labels
+
 
 def extractClassificationCases(pathToClassificationData):
     trueLabels = []
@@ -26,33 +34,19 @@ def extractClassificationCases(pathToClassificationData):
         for trueLab, predictedLab in zip(trueLabelsCase, predictedLabelsCase):
             trueLabels.append(trueLab)
             predictedLabels.append(predictedLab)
+        trueLabels = [x.strip() for x in trueLabels]
+        predictedLabels = [x.strip() for x in predictedLabels]
     return trueLabels, predictedLabels
+
 
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
                           cmap=plt.cm.Blues):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
-    """
-    if not title:
-        if normalize:
-            title = 'Normalized confusion matrix'
-        else:
-            title = 'Confusion matrix, without normalization'
-
-    # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
-    # Only use the labels that appear in the data
 
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        print("Normalized confusion matrix")
-    else:
-        print('Confusion matrix, without normalization')
-
-    # print(cm)
 
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -70,7 +64,7 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
              rotation_mode="anchor")
 
-    # Loop over data dimensions and create text annotations.
+    # create text annotations.
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
     for i in range(cm.shape[0]):
@@ -79,39 +73,117 @@ def plot_confusion_matrix(y_true, y_pred, classes,
                     ha="center", va="center",
                     color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
-    return cm
+    return fig
 
-def printClassificationQuality(trueLabels, predictedLabels):
-    # Overall accuracy
+
+def classificationQuality(trueLabels, predictedLabels, average='weighted'):
+    PRECISION = precision_score(trueLabels, predictedLabels, average=average)
+    RECALL = recall_score(trueLabels, predictedLabels, average=average)
+    F1 = f1_score(trueLabels, predictedLabels, average=average)
     ACC = accuracy_score(trueLabels, predictedLabels)
-    PRECISION = precision_score(trueLabels, predictedLabels, average='micro')
-    RECALL = recall_score(trueLabels, predictedLabels, average='micro')
+    return PRECISION, RECALL, F1, ACC
 
-    print "ACC = ", ACC
-    print "PRECISION = ", PRECISION
-    # czulosc
-    print "RECALL = ", RECALL
+
+def plotClassificationQualityForSingleLabel(listOfTrueLabels, listOfPredictedLabels, listOfK):
+    precissionList = []
+    recallList = []
+    f1List = []
+    kList = []
+    for trueLabels, predictedLabels, k in zip(listOfTrueLabels, listOfPredictedLabels, listOfK):
+        precision, recall, f1, acc = classificationQuality(trueLabels, predictedLabels, average='weighted')
+        precissionList.append(precision)
+        recallList.append(recall)
+        f1List.append(f1)
+        kList.append(k)
+    order = np.argsort(kList)
+    precissionList = np.array(precissionList)[order]
+    recallList = np.array(recallList)[order]
+    f1List = np.array(f1List)[order]
+    kList = np.array(kList)[order]
+
+    cmap = cm.get_cmap('viridis')
+    plt.plot(kList, precissionList, label="Precision", color=cmap(0.4))
+    plt.plot(kList, recallList, label="Recall", color=cmap(0.5))
+    plt.plot(kList, f1List, label="F1", color=cmap(0.6))
+    plt.legend(loc=4)
+    plt.ylim(0, 1)
+    plt.title('Classification quality char for all k')
+    plt.xlabel('k')
+
+
+def extraktNumberOfK(arg):
+    head, tail = os.path.split(arg)
+    tail = tail.replace('k_', '').replace('.txt', '')
+    return int(tail)
+
+
+def extraktLastDirFromPath(arg):
+    head, tail = os.path.split(arg)
+    return tail
+
+
+def isCorrectFileName(file):
+    if '.txt' not in file:
+        return False
+    elif 'config' in file:
+        return False
+    return True
+
+
+def createDocForOneMetric(dir):
+    metrics = extraktLastDirFromPath(dir)
+    document = Document()
+    header = document.add_heading('Report: ', 1)
+
+    listOfTrueLabels = []
+    listOfPredictedLabels = []
+    listOfK = []
+
+    for r, d, f in os.walk(dir):
+        header.add_run(metrics + ' mertics').bold = True
+        for file in f:
+            if isCorrectFileName(file):
+                pathToFileWithClassificationData = os.path.abspath(dir)
+
+                k = extraktNumberOfK(file)
+                trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData + "\\" + file)
+                plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels, predictedLabels),
+                                      normalize=True,
+                                      title='Normalized confusion matrix for ' + str(k) + ' k')
+                memfile = StringIO()
+                plt.savefig(memfile)
+                document.add_paragraph('Confusion matrix for ' + str(k) + ' k.', style='List Number')
+                document.add_picture(memfile, width=Inches(5))
+                memfile.close()
+                plt.close()
+
+                listOfTrueLabels.append(trueLabels)
+                listOfPredictedLabels.append(predictedLabels)
+                listOfK.append(k)
+
+    plotClassificationQualityForSingleLabel(listOfTrueLabels, listOfPredictedLabels, listOfK)
+    memfile = StringIO()
+    plt.savefig(memfile)
+    document.add_paragraph('Classification quality char for all k.', style='List Number')
+    document.add_picture(memfile, width=Inches(5))
+    memfile.close()
+    document.save('report_' + metrics + '.docx')
 
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "f:d:", ["filePath=", "dir="])
+        opts, args = getopt.getopt(sys.argv[1:], "f:d:r:", ["filePath=", "dir=", "report="])
     except getopt.GetoptError:
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-f", "--file"):
             filePath = arg
             pathToFileWithClassificationData = os.path.abspath(filePath)
-
             trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData)
-
-            trueLabels = [x.strip() for x in trueLabels]
-            predictedLabels = [x.strip() for x in predictedLabels]
 
             plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels, predictedLabels),
                                   normalize=True,
                                   title='Normalized confusion matrix')
-            printClassificationQuality(trueLabels, predictedLabels)
             plt.show()
 
 
@@ -120,21 +192,15 @@ def main():
 
             for r, d, f in os.walk(dir):
                 for file in f:
-                    if '.txt' in file:
-                        if 'config' in file:
-                            continue
+                    if isCorrectFileName(file):
                         pathToFileWithClassificationData = os.path.abspath(dir)
+                        trueLabels, predictedLabels = extractClassificationCases(
+                            pathToFileWithClassificationData + "\\" + file)
 
-                        trueLabels, predictedLabels = extractClassificationCases(pathToFileWithClassificationData+"\\"+file)
-
-                        trueLabels = [x.strip() for x in trueLabels]
-                        predictedLabels = [x.strip() for x in predictedLabels]
-                        #
-                        # plot_confusion_matrix(trueLabels, predictedLabels, classes=unique_labels(trueLabels,predictedLabels), normalize=True,
-                        #                       title='Normalized confusion matrix')
                         print(file)
-                        printClassificationQuality(trueLabels, predictedLabels)
 
+        elif opt in ("-r", "--report"):
+            createDocForOneMetric(arg)
 
 
 if __name__ == "__main__":

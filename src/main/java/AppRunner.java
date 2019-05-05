@@ -11,9 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import other.KNN_Algorithm;
-import other.SingleLabelKNN;
-import other.TF_IDFExtractor;
+import other.*;
 
 import java.io.File;
 import java.text.MessageFormat;
@@ -93,16 +91,16 @@ public class AppRunner {
         LOGGER.debug("Counted labels = " + countedLabels);
 
         Pair<Set<Article>, Set<Article>> splitedArticles = articleManager.splitDataInProportion(splitPerc);
-
         Set<Article> trainSet = splitedArticles.getValue0();
         Set<Article> testSet = splitedArticles.getValue1();
 
-        TF_IDFExtractor trainFeaturesExtractor = new TF_IDFExtractor(trainSet);
-        TF_IDFExtractor testFeaturesExtractor = new TF_IDFExtractor(testSet, trainFeaturesExtractor);
-
         LOGGER.info("Starting features extraction.");
-        List<FeaturedArticle> trainFeatures = trainFeaturesExtractor.extract();
-        List<FeaturedArticle> testFeatures = testFeaturesExtractor.extract();
+        TextFeaturesExtractor featuresExtractor = new TextFeaturesExtractorBuilder(testSet, trainSet)
+                .setTfIdfTresholdVal(0.7)
+                .buid();
+
+        List<FeaturedArticle> trainFeatures = featuresExtractor.extractTestSet();
+        List<FeaturedArticle> testFeatures = featuresExtractor.extractTrainSet();
 
         LOGGER.info("Starting classification.");
         KNN_Algorithm knn = new SingleLabelKNN(trainFeatures);
