@@ -5,7 +5,7 @@ import metrics.EuclideanMetrics;
 import metrics.Metrics;
 import org.junit.jupiter.api.Test;
 import other.KNN_Algorithm;
-import other.SingleLabelKNN;
+import other.LabelKNN;
 
 import java.util.*;
 
@@ -84,7 +84,7 @@ class SingleLabelKNNTest {
         trainingData.add(fa7);
         trainingData.add(fa8);
 
-        KNN_Algorithm knn = new SingleLabelKNN(trainingData);
+        KNN_Algorithm knn = new LabelKNN(trainingData);
 
         // FeaturedVectors
         TDoubleArrayList ald1 = new TDoubleArrayList(); // USA or Japan
