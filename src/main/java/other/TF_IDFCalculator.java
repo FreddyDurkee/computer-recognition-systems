@@ -64,7 +64,7 @@ public class TF_IDFCalculator {
         return DF;
     }
 
-    private static LinkedHashMap<String, Integer> termFrequencyMap(List<String> listOfWords, HashSet<String> dictionary) {
+    public static LinkedHashMap<String, Integer> termFrequencyMap(List<String> listOfWords, HashSet<String> dictionary) {
         LinkedHashMap<String, Integer> termFrequencyMap = new LinkedHashMap<>();
         for (String token : dictionary) {
             termFrequencyMap.put(token, termFrequency(listOfWords, token));
@@ -72,7 +72,7 @@ public class TF_IDFCalculator {
         return termFrequencyMap;
     }
 
-    private static int termFrequency(List<String> listOfWords, String term) {
+    public static int termFrequency(List<String> listOfWords, String term) {
         return Collections.frequency(listOfWords, term);
     }
 

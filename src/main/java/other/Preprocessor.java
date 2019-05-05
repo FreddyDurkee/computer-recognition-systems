@@ -45,8 +45,11 @@ public class Preprocessor {
         PorterStemmer stemmer = new PorterStemmer();
         List<String> listOfWords = new ArrayList<>();
         text = removeDots(text);
-        String[] arrOfSWords = text.split("[,; ?!&@#$%^*()+-.<>\\n]+");
+        String[] arrOfSWords = text.split("[/,; ?!&@#$%^*()+-.<>\\n]+");
         for (String word : arrOfSWords) {
+            if(!word.isEmpty() && word.lastIndexOf('\'') == word.length()-1){
+                word = word.substring(0,word.length()-1);
+            }
             stemmer.setCurrent(word.toLowerCase());
             stemmer.stem();
             listOfWords.add(stemmer.getCurrent());

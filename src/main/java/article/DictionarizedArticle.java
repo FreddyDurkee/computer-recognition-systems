@@ -6,17 +6,24 @@ import other.Preprocessor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class DictionarizedArticle {
     private final ArrayList<String> label;
     private String articleText;
-    private HashSet<String> dictionary;
+    private Set<String> dictionary;
     private List<String> listOfWords;
 
-    public DictionarizedArticle(ArrayList<String> label, HashSet<String> tokens) {
+    public DictionarizedArticle(ArrayList<String> label, Set<String> tokens) {
         this.label = label;
         this.dictionary = tokens;
+    }
+
+    public DictionarizedArticle(ArrayList<String> label, Set<String> tokens, List<String> listOfWords) {
+        this.label = label;
+        this.dictionary = tokens;
+        this.listOfWords = listOfWords;
     }
 
     public DictionarizedArticle(Article article) {
