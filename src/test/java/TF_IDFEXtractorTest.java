@@ -60,21 +60,21 @@ public class TF_IDFEXtractorTest {
 
         assertEquals(0, firstFeatureVector.get(memoriIdx), ERROR_DELTA);
         assertEquals(0, firstFeatureVector.get(lateIdx), ERROR_DELTA);
-        assertEquals(0.301, firstFeatureVector.get(nightIdx), ERROR_DELTA);
-        assertEquals(0.301, firstFeatureVector.get(iIdx), ERROR_DELTA);
+        assertEquals(1, firstFeatureVector.get(nightIdx), ERROR_DELTA);
+        assertEquals(1, firstFeatureVector.get(iIdx), ERROR_DELTA);
         assertEquals(0, firstFeatureVector.get(bestIdx), ERROR_DELTA);
-        assertEquals(0.301, firstFeatureVector.get(justIdx), ERROR_DELTA);
-        assertEquals(0.301, firstFeatureVector.get(wannaIdx), ERROR_DELTA);
+        assertEquals(1, firstFeatureVector.get(justIdx), ERROR_DELTA);
+        assertEquals(1, firstFeatureVector.get(wannaIdx), ERROR_DELTA);
         assertEquals(0, firstFeatureVector.get(itIdx), ERROR_DELTA);
 
         assertEquals(0, secondFeatureVector.get(memoriIdx), ERROR_DELTA);
-        assertEquals(0.301, secondFeatureVector.get(lateIdx), ERROR_DELTA);
+        assertEquals(1, secondFeatureVector.get(lateIdx), ERROR_DELTA);
         assertEquals(0, secondFeatureVector.get(nightIdx), ERROR_DELTA);
         assertEquals(0, secondFeatureVector.get(iIdx), ERROR_DELTA);
         assertEquals(0, secondFeatureVector.get(bestIdx), ERROR_DELTA);
         assertEquals(0, secondFeatureVector.get(justIdx), ERROR_DELTA);
         assertEquals(0, secondFeatureVector.get(wannaIdx), ERROR_DELTA);
-        assertEquals(0.301, secondFeatureVector.get(itIdx), ERROR_DELTA);
+        assertEquals(1, secondFeatureVector.get(itIdx), ERROR_DELTA);
 
     }
 }

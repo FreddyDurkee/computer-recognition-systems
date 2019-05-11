@@ -52,6 +52,10 @@ public class AppRunner {
         Option percOpt = new Option("p", true, "Data train/test split percentage");
         percOpt.setRequired(false);
         cmdOptions.addOption(percOpt);
+
+        Option treshOpt = new Option("t", true, "TF-IDF treshold value");
+        percOpt.setRequired(false);
+        cmdOptions.addOption(treshOpt);
     }
 
     private CommandLine parse(String[] args) {
@@ -76,7 +80,8 @@ public class AppRunner {
         Metrics metrics = MetricsFactory.createFrom(cmd.getOptionValue("m"));
         String outputPath = cmd.getOptionValue("o");
         int splitPerc = Integer.parseInt(cmd.getOptionValue("p", "70"));
-        LOGGER.info(MessageFormat.format("k={0},m={1},o={2},splitPerc={3}", listOfK, metrics.getMetricsType(), outputPath, splitPerc));
+        double treshold = Double.parseDouble(cmd.getOptionValue("t", "0.85"));
+        LOGGER.info(MessageFormat.format("k={0},m={1},o={2},splitPerc={3},t={4}", listOfK, metrics.getMetricsType(), outputPath, splitPerc, treshold));
 
 
         LOGGER.info("Starting article extraction.");
@@ -97,11 +102,13 @@ public class AppRunner {
 
         LOGGER.info("Starting features extraction.");
         TextFeaturesExtractor featuresExtractor = new TextFeaturesExtractorBuilder(testSet, trainSet)
-                .setTfIdfTresholdVal(0.7)
+                .setTfIdfTresholdVal(treshold)
                 .buid();
 
         List<FeaturedArticle> trainFeatures = featuresExtractor.extractTestSet();
         List<FeaturedArticle> testFeatures = featuresExtractor.extractTrainSet();
+
+
 
         LOGGER.info("Starting classification.");
         KNN_Algorithm knn = new LabelKNN(trainFeatures);
