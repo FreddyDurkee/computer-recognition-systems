@@ -10,8 +10,6 @@ from pandas.compat import StringIO
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, accuracy_score, recall_score, f1_score
 from sklearn.utils.multiclass import unique_labels
-import matplotlib.colors as mcolors
-import matplotlib.cm as cm
 
 
 def extractLabelsFromFile(path):
@@ -101,13 +99,29 @@ def plotClassificationQualityForSingleLabel(listOfTrueLabels, listOfPredictedLab
     f1List = np.array(f1List)[order]
     kList = np.array(kList)[order]
 
-    cmap = cm.get_cmap('viridis')
-    plt.plot(kList, precissionList, label="Precision", color=cmap(0.4))
-    plt.plot(kList, recallList, label="Recall", color=cmap(0.5))
-    plt.plot(kList, f1List, label="F1", color=cmap(0.6))
+    plt.plot(kList, precissionList, label="Precision", color=(0.2, 0.4, 0.6))
+    plt.plot(kList, recallList, label="Recall", color=(0.2, 0.7, 0.5))
+    plt.plot(kList, f1List, label="F1", color=(0.7, 0.9, 0.1))
     plt.legend(loc=4)
     plt.ylim(0, 1)
     plt.title('Classification quality char for all k')
+    plt.xlabel('k')
+
+def plotClassificationQualityForMultiLabels(listOfTrueLabels, listOfPredictedLabels, listOfK):
+    accList = []
+    kList = []
+    for trueLabels, predictedLabels, k in zip(listOfTrueLabels, listOfPredictedLabels, listOfK):
+        accList.append(accuracy_score(trueLabels, predictedLabels))
+        kList.append(k)
+
+    order = np.argsort(kList)
+    accList = np.array(accList)[order]
+    kList = np.array(kList)[order]
+
+    plt.plot(kList, accList, label="Precision", color=(0.2, 0.4, 0.6))
+    plt.legend(loc=4)
+    plt.ylim(0, 1)
+    plt.title('Accuracy char for all k')
     plt.xlabel('k')
 
 
@@ -130,7 +144,7 @@ def isCorrectFileName(file):
     return True
 
 
-def createDocForOneMetric(dir):
+def createDocForOneMetric(dir, label_mode):
     metrics = extraktLastDirFromPath(dir)
     document = Document()
     header = document.add_heading('Report: ', 1)
@@ -161,18 +175,21 @@ def createDocForOneMetric(dir):
                 listOfPredictedLabels.append(predictedLabels)
                 listOfK.append(k)
 
-    plotClassificationQualityForSingleLabel(listOfTrueLabels, listOfPredictedLabels, listOfK)
+    if label_mode == "single":
+        plotClassificationQualityForSingleLabel(listOfTrueLabels, listOfPredictedLabels, listOfK)
+    elif label_mode == "multi":
+        plotClassificationQualityForMultiLabels(listOfTrueLabels, listOfPredictedLabels, listOfK)
     memfile = StringIO()
     plt.savefig(memfile)
     document.add_paragraph('Classification quality char for all k.', style='List Number')
-    document.add_picture(memfile, width=Inches(5))
+    document.add_picture(memfile, width=Inches(6))
     memfile.close()
     document.save('report_' + metrics + '.docx')
 
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "f:d:r:", ["filePath=", "dir=", "report="])
+        opts, args = getopt.getopt(sys.argv[1:], "f:d:r:sm", ["filePath=", "dir=", "report=","singleLabel=","multiLabel="])
     except getopt.GetoptError:
         sys.exit(2)
     for opt, arg in opts:
@@ -200,7 +217,15 @@ def main():
                         print(file)
 
         elif opt in ("-r", "--report"):
-            createDocForOneMetric(arg)
+            try:
+                if ('-s','') in opts:
+                    createDocForOneMetric(arg, "single")
+                elif ('-m','') in opts:
+                    createDocForOneMetric(arg, "multi")
+                else:
+                    raise ValueError
+            except ValueError:
+                print 'must be defined additional option -s when single label or -m when multilabel', arg
 
 
 if __name__ == "__main__":
