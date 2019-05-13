@@ -1,7 +1,6 @@
 package other;
 
 import article.FeaturedArticle;
-import com.google.common.collect.Lists;
 
 import java.util.*;
 
@@ -35,10 +34,17 @@ public class LabelKNN extends KNN_Algorithm {
     List<String> predictAllLabels(HashMap<String, Integer> labelCounter) {
         List<String> predicedLabels = new ArrayList<>();
         Long all=labelCounter.values().stream().mapToLong(Long::new).sum();
+        HashMap.Entry<String, Integer> maxLabel = null;
         for(Map.Entry<String, Integer> labelInfo : labelCounter.entrySet()) {
             if((labelInfo.getValue().doubleValue()/all.doubleValue())>=0.3){
                 predicedLabels.add(labelInfo.getKey());
             }
+            if(maxLabel==null || labelInfo.getValue().compareTo(maxLabel.getValue()) > 0){
+                maxLabel = labelInfo;
+            }
+        }
+        if(predicedLabels.isEmpty()){
+            predicedLabels.add(maxLabel.getKey());
         }
         return predicedLabels;
     }
